@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(height: 300,),
-                    Icon(Iconsax.)
+                    Icon(Iconsax.add)
                   ],
                 ),
               ) : Center(

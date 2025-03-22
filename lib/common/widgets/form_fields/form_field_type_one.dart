@@ -10,7 +10,11 @@ class FormFieldTypeOne extends StatefulWidget {
       this.validator,
       this.hintText,
       this.icon,
-      this.suffixIcon, this.onChanged, this.maxLines, this.isViewSuffixIcon, this.inputFormatters});
+      this.suffixIcon,
+      this.onChanged,
+      this.maxLines,
+      this.isViewSuffixIcon,
+      this.inputFormatters});
 
   final TextEditingController controller;
   final String? labelText;
@@ -22,6 +26,7 @@ class FormFieldTypeOne extends StatefulWidget {
   final Function(String)? onChanged;
   final int? maxLines;
   final List<TextInputFormatter>? inputFormatters;
+
   @override
   State<FormFieldTypeOne> createState() => _FormFieldTypeOneState();
 }
@@ -29,6 +34,7 @@ class FormFieldTypeOne extends StatefulWidget {
 class _FormFieldTypeOneState extends State<FormFieldTypeOne> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -55,18 +61,18 @@ class _FormFieldTypeOneState extends State<FormFieldTypeOne> {
             inputFormatters: widget.inputFormatters,
             controller: widget.controller,
             cursorColor: Colors.black,
-            onChanged: (value) => widget.onChanged != null ? widget.onChanged!(value) : null,
+            onChanged: (value) =>
+                widget.onChanged != null ? widget.onChanged!(value) : null,
             cursorWidth: 1.5,
             maxLines: widget.maxLines != null ? widget.maxLines! : 1,
             minLines: 1,
             key: widget.key,
-            validator: widget.validator != null ? widget.validator : null,
+            validator: widget.validator,
             decoration: InputDecoration(
-
-                prefixIcon: Padding(
+                prefixIcon: widget.icon != null ?Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: widget.icon,
-                ),
+                ): null,
                 hintText: widget.hintText,
                 hintStyle: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w400,
@@ -75,13 +81,12 @@ class _FormFieldTypeOneState extends State<FormFieldTypeOne> {
                 ),
                 isDense: false,
                 focusedBorder: OutlineInputBorder(
-
                   borderSide: const BorderSide(
                       color: Colors.black, width: 2, style: BorderStyle.solid),
                   borderRadius: BorderRadius.circular(30),
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 15),
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: screenWidth < 500 ? 15 : 35, vertical: 15),
                 counterStyle: GoogleFonts.montserrat(
                     color: Colors.black,
                     fontSize: 18,
@@ -104,7 +109,6 @@ class _FormFieldTypeOneState extends State<FormFieldTypeOne> {
                 )),
           ),
         ),
-
       ],
     );
   }

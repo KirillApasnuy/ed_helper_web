@@ -97,24 +97,24 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    const SizedBox(
-                      height: 120,
+                    SizedBox(
+                      height: screenWidth < 600 ? 90 : 120,
                     ),
                     Text(
                       S.of(context).historyOperation,
                       style: GoogleFonts.montserrat(
                           fontSize: 25, fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(
-                      height: 30,
+                    SizedBox(
+                      height: screenWidth < 600 ? 10 : 30,
                     ),
                     if (history.isNotEmpty)
                       SizedBox(
-                        height: screenHeight - 200,
+                        height: screenHeight - (screenWidth < 600 ? 140 : 186),
                         child: SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 60,
+                              horizontal: 5,
                             ),
                             child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -138,7 +138,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     Container(
                       height: 70,
                       margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
+                          vertical: 10, horizontal: 10),
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 5),
                       decoration: BoxDecoration(
@@ -167,17 +167,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
                           ),
                           screenWidth > 600
                               ? Row(mainAxisSize: MainAxisSize.min, children: [
-                                  TextButtonTypeOneGradient(
-                                      text: S.of(context).home,
-                                      onPressed: () {
-                                        AutoRouter.of(context).push(HomeRoute());
-                                      }),
-                                  TextButtonTypeTwoGradient(
-                                      text: S.of(context).chat,
-                                      onPressed: () {
-                                        AutoRouter.of(context)
-                                            .push(HomeRoute());
-                                      }),
+                                  SizedBox(
+                                    height: 55,
+                                    child: TextButtonTypeOneGradient(
+                                        text: S.of(context).home,
+                                        onPressed: () {
+                                          AutoRouter.of(context).push(HomeRoute());
+                                        }),
+                                  ),
+                                  SizedBox(
+                                    height: 55,
+                                    child: TextButtonTypeTwoGradient(
+                                        text: S.of(context).chat,
+                                        onPressed: () {
+                                          AutoRouter.of(context)
+                                              .push(HomeRoute());
+                                        }),
+                                  ),
                                   GestureDetector(
                                     onTap: () {
                                       AutoRouter.of(context)
@@ -221,7 +227,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ],
                       ),
                     ),
-                    Row(
+                    if (screenWidth > 600)Row(
                       children: [
                         IconButton(
                           onPressed: () {

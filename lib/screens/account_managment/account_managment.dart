@@ -77,7 +77,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
 
   Future<void> _initializeUser() async {
     if (widget.authUser == null) {
-        AutoRouter.of(context).back();
+      AutoRouter.of(context).back();
     } else {
       setState(() {});
     }
@@ -87,9 +87,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
   void initState() {
     _initializeUser();
     if (widget.authUser != null) {
-
-    _emailController.text = widget.authUser!.email;
-    _passwordController.text = "********";
+      _emailController.text = widget.authUser!.email;
+      _passwordController.text = "********";
     }
   }
 
@@ -125,197 +124,214 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 ),
               ),
             ),
-            if (widget.authUser != null) Center(
-                child: SizedBox(
-              width: screenWidth < 900 ? 550 : 850,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(S.of(context).accountManagement,
-                      style: GoogleFonts.montserrat(
-                          fontSize: 30,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black)),
-                  SizedBox(height: screenHeight * 0.1),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                          width: screenWidth < 900 ? 350 : 550,
-                          child: FormFieldTypeOne(
-                            controller: _emailController,
-                            labelText: S.of(context).email,
-                          )),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: TextButtonTypeTwo(
-                            text: S.of(context).edit, onPressed: updateUser),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                          width: screenWidth < 900 ? 350 : 550,
-                          child: FormFieldTypeOne(
-                            controller: _passwordController,
-                            labelText: S.of(context).password,
-                          )),
-                      SizedBox(
-                        height: 50,
-                        width: 150,
-                        child: TextButtonTypeTwo(
-                            text: S.of(context).edit, onPressed: updateUser),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            S.of(context).deleteAccountAndAllData,
-                            style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w500,
-                                fontSize: screenWidth < 900 ? 20 : 25),
-                          ),
-                          Text(
-                            S.of(context).thisActionIsIrreversible,
-                            style: GoogleFonts.montserrat(
-                                fontWeight: FontWeight.w400,
-                                fontSize: screenWidth < 900 ? 17 : 20),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                          width: screenWidth < 900 ? 200 : 250,
+            if (widget.authUser != null)
+              Align(
+                alignment: Alignment.center,
+                  child: Container(
+                constraints: const BoxConstraints(maxWidth: 800),
+                margin: const EdgeInsets.all(10),
+                child: Column(
+                  spacing: 8,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 100,),
+                    Text(S.of(context).accountManagement,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.montserrat(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black)),
+
+                    const SizedBox(height: 20),
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      runSpacing: 8,
+                      spacing: 50,
+                      children: [
+                        Container(
+                          constraints: const BoxConstraints(maxWidth: 450),
+                            child: FormFieldTypeOne(
+                              controller: _emailController,
+                              labelText: S.of(context).email,
+                            )),
+                        Container(
                           height: 50,
+                          constraints: const BoxConstraints(maxWidth: 450),
                           child: TextButtonTypeTwo(
-                              text: S.of(context).deleteAccount,
-                              onPressed: deleteUser)),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight * 0.35),
-                ],
-              ),
-            )),
+                            mainAxisSize: screenWidth > 600 ? MainAxisSize.min: MainAxisSize.max,
+                              text: S.of(context).edit, onPressed: updateUser),
+                        )
+                      ],
+                    ),
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.end,
+                      runSpacing: 8,
+                      spacing: 50,
+
+                      children: [
+                        Container(
+                            constraints: const BoxConstraints(maxWidth: 450),
+                            child: FormFieldTypeOne(
+                              controller: _passwordController,
+                              labelText: S.of(context).password,
+                            )),
+                        Container(
+                          height: 50,
+                          constraints: const BoxConstraints(maxWidth: 450),
+                          child: TextButtonTypeTwo(
+                              mainAxisSize: screenWidth > 600 ? MainAxisSize.min: MainAxisSize.max,
+                              text: S.of(context).edit, onPressed: updateUser),
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      runAlignment: WrapAlignment.start,
+                      alignment: WrapAlignment.start,
+                      runSpacing: 8,
+                      spacing: 50,
+                      children: [
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              S.of(context).deleteAccountAndAllData,
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: screenWidth < 900 ? 20 : 25),
+                            ),
+                            Text(
+                              S.of(context).thisActionIsIrreversible,
+                              style: GoogleFonts.montserrat(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: screenWidth < 900 ? 17 : 20),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                            width: screenWidth < 900 ? 200 : 250,
+                            height: 50,
+                            child: TextButtonTypeTwo(
+                                text: S.of(context).deleteAccount,
+                                onPressed: deleteUser)),
+                      ],
+                    ),
+                  ],
+                ),
+              )),
             Align(
               alignment: Alignment.topCenter,
               child: Container(
                 constraints: const BoxConstraints(maxWidth: 1200),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: 70,
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 20),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.boxTitleFill,
-                        border: Border.all(
-                            color: AppColors.boxTitleBorder, width: 2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(60)),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // _mainScrollController.animateTo(0,
-                              //     duration: const Duration(milliseconds: 500),
-                              //     curve: Curves.easeOut);
-                            },
-                            child: MouseRegion(
-                              cursor: SystemMouseCursors.click,
-                              child: SvgPicture.asset(
-                                "assets/logo/title_logo.svg",
-                                height: 50,
-                              ),
-                            ),
-                          ),
-                          screenWidth > 600
-                              ? Row(mainAxisSize: MainAxisSize.min, children: [
-                                  TextButtonTypeOneGradient(
-                                      text: S.of(context).home,
-                                      onPressed: () {
-                                        // _mainScrollController.animateTo(0,
-                                        //     duration: const Duration(milliseconds: 500),
-                                        //     curve: Curves.easeOut);
-                                      }),
-                                  TextButtonTypeTwoGradient(
-                                      text: S.of(context).home,
-                                      onPressed: () {
-                                        AutoRouter.of(context)
-                                            .push(HomeRoute());
-                                      }),
-                                  GestureDetector(
-                                    onTap: () {
-                                      AutoRouter.of(context)
-                                          .push(const ProfileRoute());
-                                    },
-                                    child: const MouseRegion(
-                                      cursor: SystemMouseCursors.click,
-                                      child: SvgIcons(
-                                          path:
-                                              "assets/svg/select_profile_icon.svg",
-                                          size: 40),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      AutoRouter.of(context)
-                                          .push(const ProfileRoute());
-                                    },
-                                    child: const MouseRegion(
-                                      cursor: SystemMouseCursors.click,
-                                      child: SvgIcons(
-                                          path: "assets/svg/land.svg",
-                                          size: 40),
-                                    ),
-                                  ),
-                                ])
-                              : GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      isMenuVisible = !isMenuVisible;
-                                      print(isMenuVisible);
-                                    });
-                                  },
-                                  child: MouseRegion(
-                                      cursor: SystemMouseCursors.click,
-                                      child: SvgPicture.asset(
-                                        "assets/svg/title_menu.svg",
-                                        height: 40,
-                                      )),
-                                ),
-                        ],
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/svg/arrow_back.svg',
-                            width: 70,
-                            height: 70,
+                child: Container(
+                  height: 70,
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.boxTitleFill,
+                    border: Border.all(
+                        color: AppColors.boxTitleBorder, width: 2),
+                    borderRadius:
+                        const BorderRadius.all(Radius.circular(60)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          // _mainScrollController.animateTo(0,
+                          //     duration: const Duration(milliseconds: 500),
+                          //     curve: Curves.easeOut);
+                        },
+                        child: MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: SvgPicture.asset(
+                            "assets/logo/title_logo.svg",
+                            height: 50,
                           ),
                         ),
-                      ],
-                    )
-                  ],
+                      ),
+                      screenWidth > 600
+                          ? Row(mainAxisSize: MainAxisSize.min, children: [
+                              SizedBox(
+                                height: 55,
+                                child: TextButtonTypeOneGradient(
+                                    text: S.of(context).home,
+                                    onPressed: () {
+                                     AutoRouter.of(context).push(HomeRoute());
+                                    }),
+                              ),
+                              SizedBox(
+                                height: 55,
+                                child: TextButtonTypeTwoGradient(
+                                    text: S.of(context).chat,
+                                    onPressed: () {
+                                      AutoRouter.of(context)
+                                          .push(HomeRoute());
+                                    }),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  AutoRouter.of(context)
+                                      .push(const ProfileRoute());
+                                },
+                                child: const MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: SvgIcons(
+                                      path:
+                                          "assets/svg/select_profile_icon.svg",
+                                      size: 40),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  AutoRouter.of(context)
+                                      .push(const ProfileRoute());
+                                },
+                                child: const MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: SvgIcons(
+                                      path: "assets/svg/land.svg",
+                                      size: 40),
+                                ),
+                              ),
+                            ])
+                          : GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isMenuVisible = !isMenuVisible;
+                                  print(isMenuVisible);
+                                });
+                              },
+                              child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: SvgPicture.asset(
+                                    "assets/svg/title_menu.svg",
+                                    height: 40,
+                                  )),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            if (screenWidth > 550)Align(
+              alignment: Alignment.topLeft,
+              child: Container(
+                margin: const EdgeInsets.only(top: 70),
+                child: IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: SvgPicture.asset(
+                    'assets/svg/arrow_back.svg',
+                    width: 70,
+                    height: 70,
+                  ),
                 ),
               ),
             ),

@@ -10,9 +10,8 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       id: (json['id'] as num).toInt(),
       date: DateTime.parse(json['date'] as String),
       name: json['name'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String? ?? "",
       amount: (json['amount'] as num).toInt(),
-      paymentCardNumber: json['paymentCardNumber'] as String,
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
@@ -22,5 +21,4 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'name': instance.name,
       'description': instance.description,
       'amount': instance.amount,
-      'paymentCardNumber': instance.paymentCardNumber,
     };

@@ -8,11 +8,18 @@ import 'package:ed_helper_web/data/repositories/ed_helper/subscribe_repository.d
 import 'package:ed_helper_web/screens/profile/widgets/subscribe_card.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../../data/models/user/subscription.dart';
+import '../../../generated/l10n.dart';
+import '../../../util/device/localization/locale_provider.dart';
 
 class ToggleContainer extends StatefulWidget {
-  ToggleContainer({super.key, required this.isYearBilling, required this.onUserChanged, required this.authUser});
+  ToggleContainer(
+      {super.key,
+      required this.isYearBilling,
+      required this.onUserChanged,
+      required this.authUser});
 
   bool isYearBilling;
   UserModel authUser;
@@ -38,7 +45,8 @@ class _ToggleContainerState extends State<ToggleContainer> {
   }
 
   void _subscribe(Subscription subscription) async {
-    Response response = await _subscribeRepository.subscribe(planId: subscription.id);
+    Response response =
+        await _subscribeRepository.subscribe(planId: subscription.id);
     if (response.statusCode == 200 || response.statusCode == 400) {
       widget.authUser.subscription = subscription;
       widget.authUser.subscribeState = "SUBSCRIBED";
@@ -46,7 +54,8 @@ class _ToggleContainerState extends State<ToggleContainer> {
       setState(() {});
       showDialog(
         context: context,
-        builder: (context) => const DoneDialog(title: "Вы успешно подписались!"),
+        builder: (context) =>
+            const DoneDialog(title: "Вы успешно подписались!"),
       );
     } else {
       showDialog(
@@ -64,87 +73,94 @@ class _ToggleContainerState extends State<ToggleContainer> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            spacing: 10,
-            children: [
-              GestureDetector(
-                onTap: _toggleSelection,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: 150,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: widget.isYearBilling
-                        ? const Color(0xffCCE1F8)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text('Годовая',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500, fontSize: 18)),
-                  ),
-                ),
-              ),
-              GestureDetector(
-                onTap: _toggleSelection,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: 150,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: !widget.isYearBilling
-                        ? const Color(0xffCCE1F8)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: Text('Ежемесячная',
-                        style: GoogleFonts.montserrat(
-                            fontWeight: FontWeight.w500, fontSize: 18)),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 20),
-        // Плавное переключение UI
-        AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            child: Wrap(
-              direction: Axis.horizontal,
-              spacing: 40,
-              runSpacing: 20,
+    final localeProvider = Provider.of<LocaleProvider>(context);
+    final isEnglish = localeProvider.locale.languageCode == 'en';
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10,
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  spacing: 20,
-                  children: subscriptions != []
-                      ? subscriptions.map((subscription) {
-                          return Container(
-                              constraints: const BoxConstraints(maxWidth: 600),
-                              child: Expanded(
+                GestureDetector(
+                  onTap: _toggleSelection,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: 150,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: widget.isYearBilling
+                          ? const Color(0xffCCE1F8)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(S.of(context).annual,
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500, fontSize: 18)),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: _toggleSelection,
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: 150,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: !widget.isYearBilling
+                          ? const Color(0xffCCE1F8)
+                          : Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Center(
+                      child: Text(S.of(context).monthly,
+                          style: GoogleFonts.montserrat(
+                              fontWeight: FontWeight.w500, fontSize: 18)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+          // Плавное переключение UI
+          AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Wrap(
+                direction: Axis.horizontal,
+                spacing: 40,
+                runSpacing: 20,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 20,
+                    children: subscriptions != []
+                        ? subscriptions.map((subscription) {
+                            return Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 600),
                                 child: SubscribeCard(
                                   isPremium: subscription.premium,
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
                                       Text(
-                                        subscription.enTitle,
+                                        isEnglish
+                                            ? subscription.enTitle
+                                            : subscription.ruTitle,
                                         style: GoogleFonts.montserrat(
                                           fontSize: 25,
                                           fontWeight: FontWeight.w600,
@@ -158,7 +174,9 @@ class _ToggleContainerState extends State<ToggleContainer> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         spacing: 15,
-                                        children: subscription.enBenefits
+                                        children: (isEnglish
+                                                ? subscription.enBenefits
+                                                : subscription.ruBenefits)
                                             .map((benefit) {
                                           return BenefitTile(title: benefit);
                                         }).toList(),
@@ -166,20 +184,22 @@ class _ToggleContainerState extends State<ToggleContainer> {
                                       const SizedBox(height: 10),
                                       TextButtonTypeOne(
                                           text:
-                                              "${widget.isYearBilling ? subscription.amountPerMonthInYear.toString() : subscription.amountPerMonth.toString()} ₽/${widget.isYearBilling ? "год" : "мес"}",
+                                              "${widget.isYearBilling ? isEnglish ? (subscription.amountPerMonthInYear / 100).toString() : subscription.amountPerMonthInYear.toString() : isEnglish ? (subscription.amountPerMonth / 100).toString() : subscription.amountPerMonth.toString()} ${isEnglish ? "\$" : "₽"}/${widget.isYearBilling ?
+                                                  isEnglish ? "year" :"год"
+                                                 : isEnglish ? "month" :"мес"}",
                                           onPressed: () {
                                             _subscribe(subscription);
                                           })
                                     ],
                                   ),
-                                ),
-                              ));
-                        }).toList()
-                      : [Text("empty")],
-                ),
-              ],
-            )),
-      ],
+                                ));
+                          }).toList()
+                        : [Text("empty")],
+                  ),
+                ],
+              )),
+        ],
+      ),
     );
   }
 }

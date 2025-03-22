@@ -27,6 +27,8 @@ class _ActivateRatesDetailState extends State<ActivateRatesDetail> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
+
+      insetPadding: const EdgeInsets.all(8),
       child: Container(
         width: 500,
         height: 500,

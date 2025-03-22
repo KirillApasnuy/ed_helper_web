@@ -14,21 +14,23 @@ import '../../../common/widgets/button/text_button_type_one.dart';
 import '../../../generated/l10n.dart';
 import 'chat_tile.dart';
 
-class SideBar extends StatefulWidget {
-  SideBar({
+class HomeSideBar extends StatefulWidget {
+  HomeSideBar({
     super.key,
     required this.isExpanded,
     required this.onSelectChat,
+    this.isHomeRoute,
   });
 
   bool isExpanded;
+  final isHomeRoute;
   final Function(ChatModel) onSelectChat;
 
   @override
-  State<SideBar> createState() => _SideBarState();
+  State<HomeSideBar> createState() => _HomeSideBarState();
 }
 
-class _SideBarState extends State<SideBar> {
+class _HomeSideBarState extends State<HomeSideBar> {
   ChatRepository chatRepository = ChatRepository();
   TextEditingController searchController = TextEditingController();
   String? selectedAssistant;
@@ -78,8 +80,7 @@ class _SideBarState extends State<SideBar> {
     }
 
     searchResults = chatHistory
-        .where(
-            (chat) => chat.title.toLowerCase().contains(query.toLowerCase()))
+        .where((chat) => chat.title.toLowerCase().contains(query.toLowerCase()))
         .toList();
     isSearching = true;
     setState(() {});
@@ -119,26 +120,27 @@ class _SideBarState extends State<SideBar> {
         height: screenHeight,
         child: Column(
           children: [
-            Row(
-              children: [
-                const SizedBox(
-                  width: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    AutoRouter.of(context).replace(const WelcomeRoute());
-                  },
-                  child: MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: SvgPicture.asset(
-                      "assets/logo/title_logo.svg",
-                      height: 50,
+            if (widget.isHomeRoute)
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      AutoRouter.of(context).replace(const WelcomeRoute());
+                    },
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: SvgPicture.asset(
+                        "assets/logo/title_logo.svg",
+                        height: 50,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+                ],
+              ),
+            if (widget.isHomeRoute) const SizedBox(height: 20),
             SizedBox(
               width: 230,
               height: 50,
@@ -159,24 +161,30 @@ class _SideBarState extends State<SideBar> {
                     fontWeight: FontWeight.w600,
                     color: Colors.black),
               ),
-              trailing: SvgPicture.asset(
-                !widget.isExpanded
-                    ? "assets/svg/arrow_down.svg"
-                    : "assets/svg/arrow_up.svg",
-              ),
+              // trailing: SvgPicture.asset(
+              //   !widget.isExpanded
+              //       ? "assets/svg/arrow_down.svg"
+              //       : "assets/svg/arrow_up.svg",
+              // ),
               onTap: () {
                 setState(() {
                   widget.isExpanded = !widget.isExpanded;
                 });
               },
             ),
-            AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                curve: Curves.easeInOut,
-                height: widget.isExpanded ? screenHeight - 290 : 0,
-                child: chatHistory.isNotEmpty
-                    ? ListView.builder(
+            Expanded(child:
+            chatHistory.isNotEmpty
+                  ? Expanded(
+                child: Column(
+                  children: [
+                    FormFieldTypeOne(
+                      controller: searchController,
+                      onChanged: _handleSearch,
+                      maxLines: 1,
+                      hintText: "Search...",
+                    ),
+                    Expanded(
+                      child: ListView.builder(
                         itemCount: isSearching
                             ? searchResults.length
                             : chatHistory.length,
@@ -184,23 +192,7 @@ class _SideBarState extends State<SideBar> {
                           final chat = isSearching
                               ? searchResults[index]
                               : chatHistory[index];
-                          return index == 0 ? Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              FormFieldTypeOne(controller: searchController, onChanged: _handleSearch,maxLines: 1, hintText: "Search...",),
-                              ChatTile(
-                                onSelectChat: (chatModel) {
-                                  widget.onSelectChat(chatModel);
-                                  setState(() {
-                                    isSearching = false;
-                                    searchController.clear();
-                                  });
-                                },
-                                chatModel: chat,
-                                deleteChat: deleteChat, // Передаем метод удаления
-                              )
-                            ],
-                          ):ChatTile(
+                          return ChatTile(
                             onSelectChat: (chatModel) {
                               widget.onSelectChat(chatModel);
                               setState(() {
@@ -209,32 +201,39 @@ class _SideBarState extends State<SideBar> {
                               });
                             },
                             chatModel: chat,
-                            deleteChat: deleteChat, // Передаем метод удаления
+                            deleteChat: deleteChat,
                           );
                         },
-                      )
-                    : Column(
-                        children: [
-                          const SizedBox(height: 50),
-                          Center(
-                            child: token == null
-                                ? TextButtonTypeOne(
-                                    text: S.of(context).logInAcc,
-                                    onPressed: () {
-                                      AutoRouter.of(context)
-                                          .push(const AuthorizationRoute());
-                                    })
-                                : Text(
-                              S.of(context).noChatHistory,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.montserrat(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+                  : Column(
+                children: [
+                  const SizedBox(height: 50),
+                  Center(
+                    child: token == null
+                        ? TextButtonTypeOne(
+                      text: S.of(context).logInAcc,
+                      onPressed: () {
+                        AutoRouter.of(context)
+                            .push(AuthorizationRoute());
+                      },
+                    )
+                        : Text(
+                      S.of(context).noChatHistory,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.montserrat(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+            ),
           ],
         ),
       ),

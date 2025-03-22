@@ -18,25 +18,22 @@ class SideBarButton extends StatelessWidget {
       onPressed: () => onPressed(),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
-        shadowColor: Colors.white,
+        shadowColor: Colors.transparent,
         overlayColor: Colors.blue,
-        surfaceTintColor: Colors.white
+        surfaceTintColor: Colors.white,
+        // side: const BorderSide(color: Colors.blue, width: 2),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (prefixIcon != null) prefixIcon,
+          prefixIcon,
           Text(
             text,
             style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
-              color: Colors.black
-            ),
+                fontWeight: FontWeight.w600, fontSize: 20, color: Colors.black),
           ),
         ],
       ),
-
     );
   }
 }

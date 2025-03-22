@@ -3,16 +3,20 @@ import 'dart:html' as html;
 import 'dart:typed_data';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:ed_helper_web/common/widgets/app_widgets/language_selector.dart';
 import 'package:ed_helper_web/common/widgets/button/autowired_button.dart';
 import 'package:ed_helper_web/common/widgets/button/text_button_type_one.dart';
-import 'package:ed_helper_web/data/models/review_model.dart';
+import 'package:ed_helper_web/data/services/user_service.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/ai_assistant.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/background_logos.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/chat_card.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/preferens_card.dart';
+import 'package:ed_helper_web/screens/welcome/widgets/preferens_featers_card.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/question_card.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/review_card.dart';
+import 'package:ed_helper_web/screens/welcome/widgets/text_prog_card.dart';
 import 'package:ed_helper_web/util/constants/app_colors.dart';
+import 'package:ed_helper_web/util/constants/welcome_screen_lists.dart';
 import 'package:ed_helper_web/util/routes/router.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +25,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../common/widgets/app_widgets/dot_indicator.dart';
@@ -50,6 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   final ScrollController _mainScrollController = ScrollController();
   final recorder = WebAudioRecorder();
   final chatScrollController = ScrollController();
+  final UserService userService = UserService();
   TextEditingController chatController = TextEditingController();
   late Timer _timer;
   late VideoPlayerController _controller;
@@ -73,13 +79,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   void initState() {
     super.initState();
     _startAutoScroll();
+    _initialize();
     _scrollController.addListener(() {
       final pageIndex =
-      (_scrollController.offset / MediaQuery
-          .of(context)
-          .size
-          .width)
-          .round();
+          (_scrollController.offset / MediaQuery.of(context).size.width)
+              .round();
       if (pageIndex != _currentIndex) {
         setState(() {
           _currentIndex = pageIndex;
@@ -101,8 +105,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     _timer.cancel();
     super.dispose();
   }
+  void _initialize() async {
+    print("Starting verification");
+    if (!(await _verifyAuth())) {
+      try {
+        userService.newUserWithIp();
+      } on Exception catch (e) {
+        print(e);
+      }
+      print("Verified");
+    }
+  }
+  Future<bool> _verifyAuth() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    print(token);
+    if (token == null || token == "") {
+      return false;
+    }
+    return true;
+  }
 
   Future<void> _startRecording() async {
+    if (await _verifyAuth()) {
+      userService.newUserWithIp();
+    }
+
     setState(() {
       isVoiceRecorder = true;
       isVoiceMessage = true;
@@ -153,16 +181,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       _uploadMedia(file, audioFile!.fileName).then((_) {
         // Отправляем сообщение (если нужно)
         _sendMessage();
-
       });
       print("File created and upload started");
-
     } catch (e) {
       print("Failed to stop recording: $e");
     }
   }
 
   Future<void> _onPressAttachBtn() async {
+    if (await _verifyAuth()) {
+      userService.newUserWithIp();
+    }
+
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       dialogTitle: "Выберите файл",
       type: FileType.custom,
@@ -213,7 +243,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             builder: (context) {
               return const ErrorDialog(
                   title:
-                  "Ошибка выгрузки медиафайла на сервер. Попробуйте еще раз.");
+                      "Ошибка выгрузки медиафайла на сервер. Попробуйте еще раз.");
             });
       }
     } catch (e) {
@@ -236,9 +266,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
     recorder.stopRecording();
   }
-  
+
   void _startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 15), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 15), (timer) {
       if (_currentIndex < 2) {
         _currentIndex++;
       } else {
@@ -250,10 +280,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void _scrollToPage(int index) {
     _scrollController.animateTo(
-      index * MediaQuery
-          .of(context)
-          .size
-          .width,
+      index * MediaQuery.of(context).size.width,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
     );
@@ -275,112 +302,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
-  final List<String> buttonTitles = [
-    "Как ускорить моделирование и рендеринг в 3ds Max?",
-    "Инструменты сложных анимаций в Blender?",
-    "Как интегрировать UI-элементы в Unreal Engine 5 для игровых миров?",
-    "Как сгенерировать концепт арт в Midjourney?",
-    "Как анимировать персонажа в нейросетях?",
-  ];
-
-  final List<String> appTitles = """
-  3ds Max
-Blender
-Unreal Engine 5
-Autodesk Maya
-Cinema 4D
-AutoCAD
-SketchUp
-ZBrush
-Houdini
-Rhino
-Revit
-ArchiCAD
-V-Ray
-Corona Renderer
-Lumion
-Enscape Vectorworks Architect
-KeyShot
-Unity
-CryEngine
-Twinmotion
-Adobe PhotoShop
-DaVinci Resolve
-CapCut
-Adobe Premiere Pro
-After Effects
-Nuke
-Figma
-Tilda
-Affinity Suite
-FL Studio
-Ableton Live
-Logic Pro X
-Audacity
-iZotope RX"""
-      .split("\n");
-  final List<String> aiNames = """MidJourney
-Stable Diffusion
-Runway ML
-Adobe Firefly
-DreamBooth
-Artbreeder
-NightCafe Studio
-Krea.ai
-Vizcom
-Recraft
-ArchiCAD
-Jasper Art
-Luma AI
-Kaedim
-Pika Labs
-Polycam
-NVIDIA Canvas
-Scenario.gg
-Remini
-StyleGAN
-GauGAN
-PhotoAI
-3DFY.ai
-Wonder Studio
-DeepFaceLab"""
-      .split("\n");
-
-  final List<String> infos = [
-    "Мгновенная отправка скринов и голосовых сообщений нажатием одной клавиши",
-    "Возможность отправки файлов, быстрый отклик и инструкции от бота по любым проблемным вопросам",
-    "Решение прочих задач в обучение и работе (анализ файлов, быстрое написание статей и текстов, подсказки, анализ сайтов, перевод текста и др.)",
-  ];
-
-  final List<ReviewModel> reviews = [
-    ReviewModel("assets/review_img/anna.png", "Анна, 27 лет", "3D визуализатор",
-        "Раньше приходилось часами рыскать по форумам, читать сложные статьи и смотреть десятки видеоуроков, чтобы разобраться в 3ds Max. ED-Helper решил эту проблему! Теперь я могу задать вопрос и получить точный ответ за несколько секунд. Мое обучение ускорилось как минимум в десять раз!"),
-    ReviewModel("assets/review_img/olga.png", "Ольга, 22 года", "Студентка",
-        "Учусь на архитектора и начала осваивать ArchiCad совсем недавно. Без помощи «Эдика» так я ласково называю ED-Helper, думаю, я бы запуталась в море видеоуроков. Теперь любая сложность решается моментально. Учеба стала намного эффективнее"),
-    ReviewModel(
-        "assets/review_img/alexey.png",
-        "Алексей, 34 года",
-        "Архитектор",
-        "Revit всегда казался сложным, и я тратил вечера на поиск решений для мелких задач. Благодаря ED-Helper я получаю нужную инструкцию одним нажатием кнопки. Даже сложные темы объясняются настолько понятно, что я быстро решаю рабочие задачи."),
-    ReviewModel("assets/review_img/hizri.png", "Хизри, 30 лет", "VFX artist",
-        "Работаю с Unreal Engine 5. Раньше постоянно терял время, разбираясь с техническими нюансами. ED-Helper стал настоящей находкой! Он сэкономил мне кучу времени и нервов, а проекты теперь движутся гораздо быстрее."),
-    ReviewModel(
-        "assets/review_img/kate.png",
-        "Екатерина, 25 лет",
-        "Специалист по нейросетям",
-        "Классно когда нейронка ИДЕАЛЬНО обучает как пользоваться любыми нейронками.  Midjourney, Krea, RunWay я освоила за ОДИН день! Без каких либо затрат на обучение и долгий поиск информации. ED-helper сделал процесс легким и приятным. Я чувствую, как расту профессионально с каждым днем!"),
-  ];
-
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
-    double screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Stack(
         children: [
@@ -404,13 +329,14 @@ DeepFaceLab"""
                   Container(
                     constraints: const BoxConstraints(maxWidth: 1200),
                     padding: EdgeInsets.symmetric(
-                        horizontal: screenWidth < 500 ? 0 : 20),
+                        horizontal: screenWidth < 600 ? 10 : 20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 30, vertical: 20),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: screenWidth < 600 ? 0 : 20,
+                              vertical: 20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -420,48 +346,31 @@ DeepFaceLab"""
                                     direction: Axis.horizontal,
                                     alignment: WrapAlignment.start,
                                     crossAxisAlignment:
-                                    WrapCrossAlignment.center,
+                                        WrapCrossAlignment.center,
                                     runAlignment: WrapAlignment.start,
                                     children: [
+                                      const AiAssistant(),
                                       Text(
-                                        S.of(context).multimedia,
+                                        S.of(context).forWorkingWith,
                                         style: GoogleFonts.geologica(
                                             fontSize:
-                                            screenWidth > 900 ? 45 : 30,
+                                                screenWidth > 900 ? 45 : 30,
                                             fontWeight: FontWeight.w600),
                                       ),
-                                      const AiAssistant(),
+                                      Text(
+                                        S
+                                            .of(context)
+                                            .neuralNetworksAndAdvancedSoftware,
+                                        style: GoogleFonts.geologica(
+                                            fontSize:
+                                                screenWidth > 900 ? 45 : 30,
+                                            fontWeight: FontWeight.w600),
+                                      ),
                                     ]),
-                              ),
-                              Wrap(
-                                direction: Axis.horizontal,
-                                alignment: WrapAlignment.start,
-                                children: [
-                                  Text(
-                                    S.of(context).forComplexSoftwareAndNeuralNetworks,
-                                    maxLines: 2,
-                                    textAlign: TextAlign.left,
-                                    style: GoogleFonts.geologica(
-                                        fontSize: screenWidth > 900 ? 40 : 25,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Wrap(
-                                alignment: WrapAlignment.start,
-                                children: [
-                                  Text(
-                                    S.of(context).boostYourLearningAndWorkEfficiencyMultipleTimes,
-                                    style: GoogleFonts.geologica(
-                                        fontSize: screenWidth > 900 ? 25 : 18,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ],
                               ),
                               const SizedBox(height: 30),
                               ChatCard(
-                                isViewLogo: false,
+                                  isViewLogo: false,
                                   child: Flexible(
                                     child: Column(
                                       children: [
@@ -472,12 +381,14 @@ DeepFaceLab"""
                                               fontWeight: FontWeight.w600),
                                         ),
                                         Container(
-                                          constraints:
-                                          const BoxConstraints(maxWidth: 1000),
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 800),
                                           child: Text(
-                                            S.of(context).askMeAnythingAboutComplexSoftwareAndNeuralNetworksillHelp,
-                                            maxLines: 5,
+                                            S
+                                                .of(context)
+                                                .askMeAnythingAboutComplexSoftwareAndNeuralNetworksillHelp,
                                             overflow: TextOverflow.ellipsis,
+                                            maxLines: 10,
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.geologica(
                                               fontSize: 16,
@@ -487,182 +398,223 @@ DeepFaceLab"""
                                         ),
                                         const SizedBox(height: 50),
                                         SingleChildScrollView(
-                                          child: Row(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                            children: [
-                                              Transform.translate(
-                                                offset: const Offset(0, 10),
-                                                child:  isVoiceRecorder
-                                                    ? IconButton(
-                                                    onPressed: cancelVoiceRecorder,
-                                                    icon: SvgPicture.asset(
-                                                      "assets/svg/trash.svg",
-                                                      alignment: Alignment.center,
-                                                      width: 30,
-                                                      height: 30,
-                                                    ))
-                                                    : IconButton(
-                                                    onPressed: _onPressAttachBtn,
-                                                    icon: SvgPicture.asset(
-                                                      "assets/svg/attach_icon.svg",
-                                                      alignment: Alignment.center,
-                                                      width: 30,
-                                                      height: 30,
-                                                    )),
-                                              ),
-                                              Stack(
-                                                children: [
-                                                  AnimatedContainer(
-                                                    duration: const Duration(
-                                                        milliseconds: 300),
-                                                    width: screenWidth >= 1200
-                                                        ? 800
-                                                        : screenWidth * 0.6 -
-                                                        (screenWidth < 600
-                                                            ? 35
-                                                            : 0),
-                                                    child: FormFieldTypeTwo(
-                                                      controller: chatController,
-                                                      hintText: S
-                                                          .of(context)
-                                                          .inputTextForSearch,
-                                                      maxLines: 5,
-                                                      minLines: 3,
-                                                      onFieldSubmitted: _sendMessage,
-                                                      onChanged: () async {
-                                                        setState(() {});
-                                                      },
-                                                      listTile: isFileAttach
-                                                          ? ListTile(
-                                                        title: Column(
-                                                          crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                          children: [
-                                                            Text(
-                                                              attachFile?.fileName ??
-                                                                  S.of(context).noFileSelected,
-                                                              style: GoogleFonts
-                                                                  .montserrat(
-                                                                  fontSize:
-                                                                  16,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                            ),
-                                                            Text(
-                                                              attachFile != null
-                                                                  ? FormatterText
-                                                                  .formatFileSize(
-                                                                  attachFile!.bytes.length)
-                                                                  : S.of(context).noFileSelected,
-                                                              style: GoogleFonts
-                                                                  .montserrat(
-                                                                  fontSize:
-                                                                  16,
-                                                                  fontWeight:
-                                                                  FontWeight
-                                                                      .w500),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        titleAlignment:
-                                                        ListTileTitleAlignment
-                                                            .top,
-                                                        leading: SizedBox(
-                                                          width: screenWidth > 500 ? 100 : 50,
-                                                          height: screenWidth > 500 ? 100 : 50,
-                                                          child:
-                                                          ClipRRect(
-                                                            borderRadius: BorderRadius.circular(10),
-                                                            child: Image.memory(
-                                                              attachFile!.bytes,
-                                                              fit: BoxFit.cover,
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        trailing: IconButton(
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              attachFile =
-                                                              null; // Очищаем файл
-                                                              isFileAttach =
-                                                              false;
-                                                            });
-                                                          },
-                                                          icon: SvgPicture
-                                                              .asset(
-                                                              "assets/svg/trash.svg"),
-                                                        ),
-                                                      )
-                                                          : Container(),
-                                                      isViewTile: isFileAttach,
-                                                      isVoiceRecorder:
-                                                      isVoiceRecorder,
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    right: 10,
-                                                    bottom: 5,
-                                                    child: chatController
-                                                        .text.isEmpty
-                                                        ? const SizedBox(
-                                                      width: 0,
-                                                      height: 0,
-                                                    )
+                                          child: Container(
+                                            constraints: const BoxConstraints(
+                                              maxWidth: 800,
+                                              minWidth: 0,
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              children: [
+                                                if (!isFileAttach)
+                                                  Transform.translate(
+                                                    offset: const Offset(0, 10),
+                                                    child: isVoiceRecorder
+                                                        ? IconButton(
+                                                            onPressed:
+                                                                cancelVoiceRecorder,
+                                                            icon: SvgPicture
+                                                                .asset(
+                                                              "assets/svg/trash.svg",
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 30,
+                                                              height: 30,
+                                                            ))
                                                         : IconButton(
-                                                        onPressed: _sendMessage,
-                                                        icon: SvgPicture.asset(
-                                                          "assets/svg/send_message.svg",
-                                                          alignment:
-                                                          Alignment.center,
-                                                          width: 25,
-                                                          height: 25,
-                                                        )),
-                                                  )
-                                                ],
-                                              ),
-                                              Transform.translate(
-                                                offset: const Offset(0, 10),
-                                                child: GestureDetector(
-                                                  onLongPressStart: (_) async {
-                                                    setState(() {
-                                                      if (!isVoiceRecorder) _startRecording();
-                                                    });
-                                                  },
-                                                  child: isVoiceRecorder
-                                                      ? IconButton(
-                                                      onPressed: _stopRecording,
-                                                      icon: SvgPicture.asset(
-                                                        "assets/svg/send_message.svg",
-                                                        alignment: Alignment.center,
-                                                        width: 30,
-                                                        height: 30,
-                                                      ))
-                                                      : IconButton(
-                                                      onPressed: () {},
-                                                      icon: SvgPicture.asset(
-                                                        "assets/svg/microphone.svg",
-                                                        alignment: Alignment.center,
-                                                        width: 30,
-                                                        height: 30,
-                                                      )),
+                                                            onPressed:
+                                                                _onPressAttachBtn,
+                                                            icon: SvgPicture
+                                                                .asset(
+                                                              "assets/svg/attach_icon.svg",
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 30,
+                                                              height: 30,
+                                                            )),
+                                                  ),
+                                                Expanded(
+                                                  child: Stack(
+                                                    children: [
+                                                      FormFieldTypeTwo(
+                                                        controller:
+                                                            chatController,
+                                                        hintText: S
+                                                            .of(context)
+                                                            .inputTextForSearch,
+                                                        maxLines: 5,
+                                                        minLines: 3,
+                                                        onFieldSubmitted:
+                                                            _sendMessage,
+                                                        onChanged: () async {
+                                                          setState(() {});
+                                                        },
+                                                        listTile: isFileAttach
+                                                            ? ListTile(
+                                                                title: Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      attachFile
+                                                                              ?.fileName ??
+                                                                          S.of(context).noFileSelected,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                    Text(
+                                                                      attachFile !=
+                                                                              null
+                                                                          ? FormatterText.formatFileSize(attachFile!
+                                                                              .bytes
+                                                                              .length)
+                                                                          : S
+                                                                              .of(context)
+                                                                              .noFileSelected,
+                                                                      style: GoogleFonts.montserrat(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.w500),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                titleAlignment:
+                                                                    ListTileTitleAlignment
+                                                                        .top,
+                                                                leading:
+                                                                    SizedBox(
+                                                                  width:
+                                                                      screenWidth >
+                                                                              500
+                                                                          ? 100
+                                                                          : 50,
+                                                                  height:
+                                                                      screenWidth >
+                                                                              500
+                                                                          ? 100
+                                                                          : 50,
+                                                                  child:
+                                                                      ClipRRect(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    child: Image
+                                                                        .memory(
+                                                                      attachFile!
+                                                                          .bytes,
+                                                                      fit: BoxFit
+                                                                          .cover,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                trailing:
+                                                                    IconButton(
+                                                                  onPressed:
+                                                                      () {
+                                                                    setState(
+                                                                        () {
+                                                                      attachFile =
+                                                                          null; // Очищаем файл
+                                                                      isFileAttach =
+                                                                          false;
+                                                                    });
+                                                                  },
+                                                                  icon: SvgPicture
+                                                                      .asset(
+                                                                          "assets/svg/trash.svg"),
+                                                                ),
+                                                              )
+                                                            : Container(),
+                                                        isViewTile:
+                                                            isFileAttach,
+                                                        isVoiceRecorder:
+                                                            isVoiceRecorder,
+                                                      ),
+                                                      Positioned(
+                                                        right: 10,
+                                                        bottom: 5,
+                                                        child: chatController
+                                                                .text.isEmpty
+                                                            ? const SizedBox(
+                                                                width: 0,
+                                                                height: 0,
+                                                              )
+                                                            : IconButton(
+                                                                onPressed:
+                                                                    _sendMessage,
+                                                                icon: SvgPicture
+                                                                    .asset(
+                                                                  "assets/svg/send_message.svg",
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .center,
+                                                                  width: 25,
+                                                                  height: 25,
+                                                                )),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
+                                                Transform.translate(
+                                                  offset: const Offset(0, 10),
+                                                  child: GestureDetector(
+                                                    onLongPressStart:
+                                                        (_) async {
+                                                      setState(() {
+                                                        if (!isVoiceRecorder)
+                                                          _startRecording();
+                                                      });
+                                                    },
+                                                    child: isVoiceRecorder
+                                                        ? IconButton(
+                                                            onPressed:
+                                                                _stopRecording,
+                                                            icon: SvgPicture
+                                                                .asset(
+                                                              "assets/svg/send_message.svg",
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 30,
+                                                              height: 30,
+                                                            ))
+                                                        : IconButton(
+                                                            onPressed: () {},
+                                                            icon: SvgPicture
+                                                                .asset(
+                                                              "assets/svg/microphone.svg",
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              width: 30,
+                                                              height: 30,
+                                                            )),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(height: 30),
                                         Container(
-                                          constraints:
-                                          const BoxConstraints(maxWidth: 1000),
+                                          constraints: const BoxConstraints(
+                                              maxWidth: 1000),
                                           child: Wrap(
                                             direction: Axis.horizontal,
                                             alignment: WrapAlignment.center,
-                                            children: buttonTitles.map((title) {
+                                            children: WelcomeScreenLists()
+                                                .buttonTitles()
+                                                .map((title) {
                                               return AutowiredButton(
                                                 onPressed: (text) {
                                                   chatController.text = text;
@@ -682,74 +634,104 @@ DeepFaceLab"""
                                   S.of(context).edHelperFeatures,
                                   style: GoogleFonts.geologica(
                                       fontSize: screenWidth > 900 ? 40 : 25,
-                                      fontWeight: FontWeight.w600),
+                                      fontWeight: FontWeight.w400),
                                 ),
                               ]),
                               const SizedBox(height: 30),
+                              Center(
+                                child: Wrap(
+                                  alignment: WrapAlignment.center,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  spacing: screenWidth < 600 ? 10 : 16,
+                                  runSpacing: screenWidth < 600 ? 10 : 16,
+                                  children: WelcomeScreenLists()
+                                      .features()
+                                      .map((cardModel) {
+                                    return PreferensFeatersCard(
+                                        cardModel: cardModel);
+                                  }).toList(),
+                                ),
+                              ),
+                              const SizedBox(height: 30),
                               PreferensCard(
                                   child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      Wrap(
-                                        alignment: WrapAlignment.center,
-                                        children: [
-                                          Text(
-                                              S.of(context).clearInstructionsTextVideoScreenshotsForSolvingAnyProblemsIn,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 10,
-                                              style: GoogleFonts.montserrat(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 18)),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 30),
-                                      Container(
-                                        constraints: const BoxConstraints(
-                                            maxWidth: 1000),
-                                        child: Wrap(
-                                          spacing: 16,
-                                          runSpacing: 16,
-                                          direction: Axis.horizontal,
-                                          alignment: WrapAlignment.center,
-                                          children: appTitles.map((title) {
-                                            return TextButtonTypeOne(
-                                              mainAxisSize: MainAxisSize.min,
-                                              onPressed: () {},
-                                              text: title,
-                                            );
-                                          }).toList(),
-                                        ),
-                                      )
+                                      SvgIcons(
+                                          path: "assets/svg/computer.svg",
+                                          size: screenWidth < 600 ? 70 : 110),
                                     ],
-                                  )),
+                                  ),
+                                  Wrap(
+                                    alignment: WrapAlignment.center,
+                                    children: [
+                                      Text(
+                                          S
+                                              .of(context)
+                                              .straighttothepointInstructionsOnlyPreciseStepsForWorkingWithComplexSoftware,
+                                          textAlign: TextAlign.center,
+                                          maxLines: 10,
+                                          style: GoogleFonts.montserrat(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18)),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 30),
+                                  Container(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 1000),
+                                    child: Wrap(
+                                      spacing: screenWidth < 600 ? 10 : 16,
+                                      runSpacing: screenWidth < 600 ? 10 : 16,
+                                      direction: Axis.horizontal,
+                                      alignment: WrapAlignment.center,
+                                      children: WelcomeScreenLists.appTitles
+                                          .map((title) {
+                                        return TextProgCard(text: title);
+                                      }).toList(),
+                                    ),
+                                  )
+                                ],
+                              )),
                               const SizedBox(height: 30),
                               PreferensCard(
                                 child: Column(
                                   children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        SvgIcons(
+                                            path: "assets/svg/brain.svg",
+                                            size: screenWidth < 600 ? 70 : 110),
+                                      ],
+                                    ),
                                     Container(
                                         constraints: const BoxConstraints(
                                             maxWidth: 1050),
                                         width: screenWidth > 1050 ? 1050 : null,
                                         child: Text(
-                                            S.of(context).assistanceInTrainingAVarietyOfNeuralNetworksAvailableOn,
+                                            S
+                                                .of(context)
+                                                .assistanceInTrainingAVarietyOfNeuralNetworksAvailableOn,
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.montserrat(
-                                                fontWeight: FontWeight.w500,
+                                                fontWeight: FontWeight.w600,
                                                 fontSize: 18))),
                                     const SizedBox(height: 30),
                                     Container(
                                       constraints:
-                                      const BoxConstraints(maxWidth: 1000),
+                                          const BoxConstraints(maxWidth: 1000),
                                       child: Wrap(
-                                        spacing: 16,
-                                        runSpacing: 16,
+                                        spacing: screenWidth < 600 ? 10 : 16,
+                                        runSpacing: screenWidth < 600 ? 10 : 16,
                                         direction: Axis.horizontal,
                                         alignment: WrapAlignment.center,
-                                        children: aiNames.map((title) {
-                                          return TextButtonTypeOne(
-                                            mainAxisSize: MainAxisSize.min,
-                                            onPressed: () {},
-                                            text: title,
-                                          );
+                                        children: WelcomeScreenLists.aiNames
+                                            .map((title) {
+                                          return TextProgCard(text: title);
                                         }).toList(),
                                       ),
                                     )
@@ -757,42 +739,22 @@ DeepFaceLab"""
                                 ),
                               ),
                               const SizedBox(height: 30),
-                              Wrap(
-                                spacing: 30,
-                                runSpacing: 30,
-                                direction: Axis.horizontal,
-                                alignment: WrapAlignment.center,
-                                children: infos.map((info) {
-                                  return PreferensCard(
-                                    axis: MainAxisSize.min,
-                                    child: SizedBox(
-                                      width: 300,
-                                      height: 300,
-                                      child: Column(
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            info,
-                                            textAlign: TextAlign.center,
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 17,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
+                              Center(
+                                child: Container(
+                                  height: 50,
+                                  constraints: const BoxConstraints(
+                                    maxWidth: 350,
+                                  ),
+                                  child: TextButtonTypeOne(
+                                    mainAxisSize: MainAxisSize.min,
+                                    text: S.of(context).downloadApp,
+                                    onPressed: () {},
+                                    suffix: const SvgIcons(
+                                        path: "assets/logo/windows.svg",
+                                        size: 20),
+                                  ),
+                                ),
                               ),
-                              const SizedBox(height: 10),
-                              Center(child: TextButtonTypeOne(
-                                text: S.of(context).download,
-                                onPressed: () {},
-                                suffix: const SvgIcons(
-                                    path: "assets/logo/windows.svg", size: 20),
-                              ),),
                               const SizedBox(height: 30),
                               Center(
                                 child: Stack(
@@ -800,36 +762,36 @@ DeepFaceLab"""
                                   children: [
                                     screenWidth < 1000
                                         ? Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 20, vertical: 15),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius:
-                                        BorderRadius.circular(60),
-                                        border: Border.all(
-                                            color: Colors.blue
-                                                .withOpacity(0.5),
-                                            width: 3),
-                                      ),
-                                      child: Wrap(
-                                        children: [
-                                          Text(
-                                              S.of(context).learnHowToUse,
-                                              maxLines: 2,
-                                              textAlign: TextAlign.center,
-                                              style:
-                                              GoogleFonts.montserrat(
-                                                  fontSize: 16,
-                                                  fontWeight:
-                                                  FontWeight.w600,
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 15),
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(60),
+                                              border: Border.all(
                                                   color: Colors.blue
-                                                      .withOpacity(
-                                                      0.5))),
-                                        ],
-                                      ),
-                                    )
+                                                      .withOpacity(0.5),
+                                                  width: 3),
+                                            ),
+                                            child: Wrap(
+                                              children: [
+                                                Text(
+                                                    S.of(context).learnHowToUse,
+                                                    maxLines: 2,
+                                                    textAlign: TextAlign.center,
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                            color: Colors.blue
+                                                                .withOpacity(
+                                                                    0.5))),
+                                              ],
+                                            ),
+                                          )
                                         : SvgPicture.asset(
-                                        "assets/svg/video_part.svg"),
+                                            "assets/svg/video_part.svg"),
                                   ],
                                 ),
                               ),
@@ -847,7 +809,7 @@ DeepFaceLab"""
                                       if (_controller.value.isInitialized)
                                         AspectRatio(
                                           aspectRatio:
-                                          _controller.value.aspectRatio,
+                                              _controller.value.aspectRatio,
                                           child: VideoPlayer(_controller),
                                         )
                                       else
@@ -861,16 +823,17 @@ DeepFaceLab"""
                                           color: const Color(0xff77ADED),
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor:
-                                            const Color(0xff77ADED),
+                                                const Color(0xff77ADED),
                                           ),
                                           icon: SizedBox(
-                                            width: 100,
-                                            height: 100,
+                                            width: screenWidth < 500 ? 45 : 100,
+                                            height:
+                                                screenWidth < 500 ? 45 : 100,
                                             child: Icon(
                                               _controller.value.isPlaying
                                                   ? Iconsax.pause_circle5
                                                   : Iconsax.play_cricle5,
-                                              size: 80,
+                                              size: screenWidth < 500 ? 40 : 80,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -895,7 +858,9 @@ DeepFaceLab"""
                                 scrollDirection: Axis.horizontal,
                                 controller: _scrollController,
                                 child: Row(
-                                  children: reviews.map((review) {
+                                  children: WelcomeScreenLists()
+                                      .reviews()
+                                      .map((review) {
                                     return Container(
                                       margin: const EdgeInsets.symmetric(
                                           horizontal: 10),
@@ -906,7 +871,8 @@ DeepFaceLab"""
                               ),
                               const SizedBox(height: 20),
                               DotIndicator(
-                                itemCount: reviews.length,
+                                itemCount:
+                                    WelcomeScreenLists().reviews().length,
                                 currentIndex: _currentIndex,
                                 onDotTapped: _onDotTapped,
                               ),
@@ -924,21 +890,21 @@ DeepFaceLab"""
                               const SizedBox(height: 100),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   GestureDetector(
                                     onTap: () {
                                       _mainScrollController.animateTo(0,
                                           duration:
-                                          const Duration(milliseconds: 500),
+                                              const Duration(milliseconds: 500),
                                           curve: Curves.easeOut);
                                     },
                                     child: MouseRegion(
                                       cursor: SystemMouseCursors.click,
                                       child: SvgPicture.asset(
                                         "assets/logo/title_logo.svg",
-                                        height: 70,
+                                        height: screenWidth < 600 ? 50 : 70,
                                       ),
                                     ),
                                   ),
@@ -964,7 +930,8 @@ DeepFaceLab"""
             alignment: Alignment.topCenter,
             child: Container(
               height: 70,
-              margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              margin: EdgeInsets.symmetric(
+                  vertical: 10, horizontal: screenWidth < 600 ? 5 : 20),
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
               decoration: BoxDecoration(
                 color: AppColors.boxTitleFill,
@@ -991,59 +958,57 @@ DeepFaceLab"""
                   ),
                   screenWidth > 600
                       ? Row(mainAxisSize: MainAxisSize.min, children: [
-                    TextButtonTypeOneGradient(
-                        text: S.of(context).home,
-                        onPressed: () {
-                          _mainScrollController.animateTo(0,
-                              duration: const Duration(milliseconds: 500),
-                              curve: Curves.easeOut);
-                        }),
-                    TextButtonTypeTwoGradient(
-                        text: S.of(context).chat,
-                        onPressed: () {
-                          AutoRouter.of(context).push(HomeRoute());
-                        }),
-                    GestureDetector(
-                      onTap: () {
-                        AutoRouter.of(context).push(const ProfileRoute());
-                      },
-                      child: const MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: SvgIcons(
-                            path: "assets/svg/profile_icon.svg",
-                            size: 40),
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        AutoRouter.of(context).push(const ProfileRoute());
-                      },
-                      child: const MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: SvgIcons(
-                            path: "assets/svg/land.svg", size: 40),
-                      ),
-                    ),
-                  ])
+                          SizedBox(
+                            height: 55,
+                            child: TextButtonTypeOneGradient(
+                                text: S.of(context).home,
+                                onPressed: () {
+                                  _mainScrollController.animateTo(0,
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeOut);
+                                }),
+                          ),
+                          SizedBox(
+                            height: 55,
+                            child: TextButtonTypeTwoGradient(
+                                text: S.of(context).chat,
+                                backgroundColor: Colors.transparent,
+                                onPressed: () {
+                                  AutoRouter.of(context).push(HomeRoute());
+                                }),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              AutoRouter.of(context).push(const ProfileRoute());
+                            },
+                            child: const MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: SvgIcons(
+                                  path: "assets/svg/profile_icon.svg",
+                                  size: 40),
+                            ),
+                          ),
+                          LanguageSelector(),
+                        ])
                       : GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isMenuVisible = !isMenuVisible;
-                        print(isMenuVisible);
-                      });
-                    },
-                    child: MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: SvgPicture.asset(
-                          "assets/svg/title_menu.svg",
-                          height: 40,
-                        )),
-                  ),
+                          onTap: () {
+                            setState(() {
+                              isMenuVisible = !isMenuVisible;
+                              print(isMenuVisible);
+                            });
+                          },
+                          child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: SvgPicture.asset(
+                                "assets/svg/title_menu.svg",
+                                height: 40,
+                              )),
+                        ),
                 ],
               ),
             ),
           ),
-
           AnimatedPositioned(
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
@@ -1054,19 +1019,21 @@ DeepFaceLab"""
               mainAxisSize: MainAxisSize.min,
               children: [
                 // if (isMenuVisible)
-                if (isMenuVisible) GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      isMenuVisible = !isMenuVisible;
-                    });
-                  },
-                  child: Container(
-                    width: screenWidth,
-                    height: screenHeight,
-                    color: Colors.black.withOpacity(0.2),
+                if (isMenuVisible)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        isMenuVisible = !isMenuVisible;
+                      });
+                    },
+                    child: Container(
+                      width: screenWidth,
+                      height: screenHeight,
+                      color: Colors.black.withOpacity(0.2),
+                    ),
                   ),
-                ),
-                SideBar(scrollController: _mainScrollController,
+                SideBar(
+                    scrollController: _mainScrollController,
                     isVisible: isMenuVisible),
               ],
             ),
@@ -1078,7 +1045,7 @@ DeepFaceLab"""
 
   void _sendMessage() {
     ChatMessage message = ChatMessage(
-        timestamp: DateTime.now(),
+      timestamp: DateTime.now(),
       text: chatController.text,
       user: true,
       audioFile: audioFile,

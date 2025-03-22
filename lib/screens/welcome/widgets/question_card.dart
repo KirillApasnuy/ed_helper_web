@@ -41,7 +41,7 @@ class _QuestionCardState extends State<QuestionCard> {
         }
       );
       Future.delayed(const Duration(seconds: 3), () {
-        AutoRouter.of(context).popAndPush(const AuthorizationRoute());
+        AutoRouter.of(context).popAndPush(AuthorizationRoute());
       });
     }
     if (questionController.text.isNotEmpty) {
@@ -69,9 +69,9 @@ class _QuestionCardState extends State<QuestionCard> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     return Container(
-        margin: const EdgeInsets.all(15.0),
+        margin: EdgeInsets.all(screenWidth < 600 ? 0: 15.0),
         constraints: const BoxConstraints(minWidth: 320, maxWidth: 1200),
-        padding: EdgeInsets.all(screenWidth < 900 ? 30 : 50),
+        padding: EdgeInsets.all(screenWidth < 600 ? 15: screenWidth < 900 ? 30 : 50),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(50)),
           border: Border.all(color: AppColors.cardBorder, width: 2),
@@ -87,10 +87,13 @@ class _QuestionCardState extends State<QuestionCard> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  S.of(context).haveQuestions,
-                  style: GoogleFonts.montserrat(
-                      fontSize: 20, fontWeight: FontWeight.w400),
+                Container(
+                  margin: const EdgeInsets.only(left: 10),
+                  child: Text(
+                    S.of(context).haveQuestions,
+                    style: GoogleFonts.montserrat(
+                        fontSize: 20, fontWeight: FontWeight.w400),
+                  ),
                 ),
                 const SizedBox(
                   height: 10,
@@ -218,7 +221,7 @@ class _QuestionCardState extends State<QuestionCard> {
                       icon: SizedBox(
                         width: 34,
                         child: SvgPicture.asset(
-                          "assets/logo/watsapp_blue.svg",
+                          "assets/svg/discord.svg",
                         ),
                       ),
                     ),
@@ -236,7 +239,7 @@ class _QuestionCardState extends State<QuestionCard> {
                       icon: SizedBox(
                         width: 34,
                         child: SvgPicture.asset(
-                          "assets/logo/vk_blue.svg",
+                          "assets/logo/instagram_blue.svg",
                         ),
                       ),
                     ),
@@ -254,7 +257,7 @@ class _QuestionCardState extends State<QuestionCard> {
                       icon: SizedBox(
                         width: 34,
                         child: SvgPicture.asset(
-                          "assets/logo/instagram_blue.svg",
+                          "assets/svg/x.svg",
                         ),
                       ),
                     ),

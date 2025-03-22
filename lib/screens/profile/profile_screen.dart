@@ -9,6 +9,7 @@ import 'package:ed_helper_web/util/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../../common/widgets/button/text_button_type_one_gradient.dart';
 import '../../common/widgets/button/text_button_type_two_gradient.dart';
@@ -27,6 +28,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final ScrollController _mainScrollController = ScrollController();
   final UserRepository userRepository = UserRepository();
+  bool notAuth = true;
   bool isMenuVisible = false;
   UserModel? authUser;
 
@@ -111,11 +113,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              Center(
+              notAuth ? Align(
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 300,),
+                    Icon(Iconsax.)
+                  ],
+                ),
+              ) : Center(
                 child: Container(
                   constraints: const BoxConstraints(
                     maxWidth: 1200,
                   ),
+                  margin: const EdgeInsets.all(10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     mainAxisSize: MainAxisSize.min,
@@ -228,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         height: 70,
                         margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
+                            vertical: 10, horizontal: 10),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 5),
                         decoration: BoxDecoration(
@@ -243,9 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // _mainScrollController.animateTo(0,
-                                //     duration: const Duration(milliseconds: 500),
-                                //     curve: Curves.easeOut);
+                                AutoRouter.of(context).push(HomeRoute());
                               },
                               child: MouseRegion(
                                 cursor: SystemMouseCursors.click,
@@ -259,19 +270,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ? Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                        TextButtonTypeOneGradient(
-                                            text: S.of(context).home,
-                                            onPressed: () {
-                                              // _mainScrollController.animateTo(0,
-                                              //     duration: const Duration(milliseconds: 500),
-                                              //     curve: Curves.easeOut);
-                                            }),
-                                        TextButtonTypeTwoGradient(
-                                            text: S.of(context).chat,
-                                            onPressed: () {
-                                              AutoRouter.of(context)
-                                                  .push(HomeRoute());
-                                            }),
+                                        SizedBox(
+                                          height: 55,
+                                          child: TextButtonTypeOneGradient(
+                                              text: S.of(context).home,
+                                              onPressed: () {
+                                                AutoRouter.of(context).pop();
+                                              }),
+                                        ),
+                                        SizedBox(
+                                          height: 55,
+                                          child: TextButtonTypeTwoGradient(
+                                              text: S.of(context).chat,
+                                              onPressed: () {
+                                                AutoRouter.of(context)
+                                                    .push(HomeRoute());
+                                              }),
+                                        ),
                                         GestureDetector(
                                           onTap: () {
                                             AutoRouter.of(context)
@@ -315,7 +330,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-                      Row(
+                      if (screenWidth > 500) Row(
                         children: [
                           IconButton(
                             onPressed: () {

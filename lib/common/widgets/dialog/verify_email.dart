@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/models/chat_message/chat_message.dart';
 import '../../../generated/l10n.dart';
 import '../../../util/constants/app_colors.dart';
 import '../button/text_button_type_one.dart';
@@ -17,8 +18,8 @@ import '../form_fields/form_field_type_one.dart';
 final _formKey = GlobalKey<FormState>();
 
 class VerifyEmail extends StatefulWidget {
-  const VerifyEmail({super.key});
-
+  const VerifyEmail({super.key, this.unAuthMessage});
+  final ChatMessage? unAuthMessage;
   @override
   State<VerifyEmail> createState() => _VerifyEmailState();
 }
@@ -33,7 +34,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.data);
-      AutoRouter.of(context).replace(HomeRoute(), onFailure: (_) => AutoRouter.of(context).push(const AppErrorRoute()));
+      AutoRouter.of(context).replace(HomeRoute(message: widget.unAuthMessage), onFailure: (_) => AutoRouter.of(context).push(const AppErrorRoute()));
     }
     showDialog(
         context: context,
@@ -46,53 +47,20 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
-    double size = screenWidth < screenHeight
-        ? screenWidth
-        : screenHeight; // Выбираем меньший размер
-    double containerSize = size >= 600 ? 600 : (size <= 500 ? 500 : size);
     return Dialog(
+      insetPadding: const EdgeInsets.all(8),
       child: Container(
-        width: 600,
-        height: 300,
+        constraints: const BoxConstraints(
+          maxWidth: 600,
+        ),
         decoration: BoxDecoration(
             color: AppColors.backgroundScreen,
             borderRadius: const BorderRadius.all(Radius.circular(30))),
-        child: Stack(
+        child: Column(
+
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Align(
-              alignment: Alignment.center,
-              child: Form(
-                key: _formKey,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 50, horizontal: 50),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        S.of(context).inputCode,
-                        style: GoogleFonts.montserrat(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black),
-                      ),
-                      FormFieldTypeOne(
-                        controller: codeController,
-                        validator: ValidationService().validateEmpty,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButtonTypeOne(
-                              text: S.of(context).register, onPressed: verifyEmail),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
+
             Align(
               alignment: Alignment.topRight,
               child: Padding(
@@ -104,6 +72,36 @@ class _VerifyEmailState extends State<VerifyEmail> {
                     icon: SvgPicture.asset(
                       "assets/svg/delete_icon.svg",
                     )),
+              ),
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Form(
+                key: _formKey,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal:screenWidth < 600 ? 10 : 50),
+
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    spacing: 8,
+                    children: [
+                      Text(
+                        S.of(context).inputCode,
+                        style: GoogleFonts.montserrat(
+                            fontSize: screenWidth < 600 ? 26 : 32,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black),
+                      ),
+                      FormFieldTypeOne(
+                        controller: codeController,
+                        validator: ValidationService().validateEmpty,
+                      ),
+                      TextButtonTypeOne(
+                          text: S.of(context).register, onPressed: verifyEmail, mainAxisSize: screenWidth < 600 ? MainAxisSize.max : MainAxisSize.min,),
+                      const SizedBox(height: 40,)
+                    ],
+                  ),
+                ),
               ),
             ),
           ],

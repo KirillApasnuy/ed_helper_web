@@ -44,7 +44,7 @@ class _ChatCardState extends State<ChatCard> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(screenWidth < 500 ? 10:20),
+              padding: EdgeInsets.all(screenWidth < 600 ? 5 :20),
               constraints: BoxConstraints(
                 maxWidth: widget.maxWidth,
 

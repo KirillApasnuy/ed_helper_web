@@ -12,8 +12,9 @@ class PreferensCard extends StatefulWidget {
 class _PreferensCardState extends State<PreferensCard> {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      padding: const EdgeInsets.all(50),
+      padding: EdgeInsets.all(screenWidth < 600 ? 30 : 50),
       constraints: const BoxConstraints(
         maxWidth: 1200,
       ),

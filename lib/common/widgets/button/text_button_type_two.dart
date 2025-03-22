@@ -4,10 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TextButtonTypeTwo extends StatefulWidget {
   TextButtonTypeTwo(
-      {super.key, required this.text, required this.onPressed, this.borderColor, this.suffixIcon, this.textColor});
+      {super.key, required this.text, required this.onPressed, this.borderColor, this.suffixIcon, this.textColor, this.mainAxisSize= MainAxisSize.max});
 
   final String text;
   final Function onPressed;
+  final MainAxisSize mainAxisSize;
   Color? borderColor = const Color(0xff1C54B5);
   Color? textColor = const Color(0xff000000);
   final Widget? suffixIcon;
@@ -48,12 +49,12 @@ class _TextButtonTypeTwoState extends State<TextButtonTypeTwo> {
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
                 child: Row(
                   mainAxisAlignment: widget.suffixIcon != null ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: widget.mainAxisSize,
                   children: [
                     Text(
                       widget.text,
                       textAlign: TextAlign.center,
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.montserrat(
                         color:

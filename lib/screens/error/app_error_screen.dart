@@ -56,13 +56,13 @@ class _AppErrorScreenState extends State<AppErrorScreen> {
                           ),],
                       ),
                     ),
-                    Center(
-                      child: SizedBox(
-                        width: logoSize,
-                        height: logoSize,
-                        child: Image.asset("assets/main_logo.png"),
-                      ),
-                    ),
+                    // Center(
+                    //   child: SizedBox(
+                    //     width: logoSize,
+                    //     height: logoSize,
+                    //     child: Image.asset("assets/main_logo.png"),
+                    //   ),
+                    // ),
                   ],
                 ),
               )

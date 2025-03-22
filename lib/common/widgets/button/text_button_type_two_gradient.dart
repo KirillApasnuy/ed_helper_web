@@ -4,16 +4,24 @@ import 'package:google_fonts/google_fonts.dart';
 
 class TextButtonTypeTwoGradient extends StatefulWidget {
   TextButtonTypeTwoGradient(
-      {super.key, required this.text, required this.onPressed, this.borderColor, this.suffixIcon, this.textColor});
+      {super.key,
+      required this.text,
+      required this.onPressed,
+      this.borderColor,
+      this.suffixIcon,
+      this.textColor,
+      this.backgroundColor = Colors.white,});
 
   final String text;
   final Function onPressed;
   Color? borderColor = const Color(0xff1C54B5);
   Color? textColor = const Color(0xff000000);
+  Color backgroundColor;
   final Widget? suffixIcon;
 
   @override
-  State<TextButtonTypeTwoGradient> createState() => _TextButtonTypeTwoGradientState();
+  State<TextButtonTypeTwoGradient> createState() =>
+      _TextButtonTypeTwoGradientState();
 }
 
 class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
@@ -24,8 +32,7 @@ class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-
-      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      margin: const EdgeInsets.all(5),
       child: MouseRegion(
         onEnter: (_) => setState(() => isHovered = true),
         onExit: (_) => setState(() => isHovered = false),
@@ -36,21 +43,30 @@ class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
             child: TextButton(
                 onPressed: () => widget.onPressed(),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                  !isPressed ? isHovered? AppColors.cardBackground : Colors.white : const Color(0xff1C54B5),
+                  backgroundColor: !isPressed
+                      ? isHovered
+                          ? AppColors.cardBackground
+                          : widget.backgroundColor
+                      : const Color(0xff1C54B5),
                   foregroundColor: AppColors.cardBackground,
-
                   surfaceTintColor: Colors.white,
                   overlayColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
-                    side: BorderSide(color: widget.borderColor ?? const Color(0xff1C54B5), width: 2),
+                    side: BorderSide(
+                        color: widget.borderColor ?? const Color(0xff1C54B5),
+                        width: 2),
                   ),
                 ),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12.5),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   child: Row(
-                    mainAxisAlignment: widget.suffixIcon != null ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                    mainAxisAlignment: widget.suffixIcon != null
+                        ? MainAxisAlignment.spaceBetween
+                        : MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
@@ -59,8 +75,11 @@ class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.montserrat(
-                          color:
-                          !isPressed ? widget.textColor ?? widget.borderColor ?? const Color(0xff1C54B5) : AppColors.primary,
+                          color: !isPressed
+                              ? widget.textColor ??
+                                  widget.borderColor ??
+                                  const Color(0xff1C54B5)
+                              : AppColors.primary,
                           fontSize: 18.5,
                           height: 1.0,
                           fontWeight: FontWeight.w500,

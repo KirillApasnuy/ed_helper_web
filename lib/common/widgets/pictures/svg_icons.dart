@@ -11,7 +11,7 @@ class SvgIcons extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.all(5),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(path, width: size, height: size,),
             if (suffixIcon != null ) const SizedBox(width: 10,),

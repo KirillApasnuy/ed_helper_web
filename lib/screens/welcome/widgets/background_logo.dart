@@ -5,7 +5,8 @@ class BackgroundLogo extends StatefulWidget {
   @override
   State<BackgroundLogo> createState() => _BackgroundLogoState();
 }
-
+//scp -r build/web/* root@88.218.169.128:~/ed_helper/web
+//kP_Rcq9WUuGBm7
 class _BackgroundLogoState extends State<BackgroundLogo> {
   @override
   Widget build(BuildContext context) {

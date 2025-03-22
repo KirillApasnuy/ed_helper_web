@@ -20,16 +20,14 @@ class _CenterMainLogoState extends State<CenterMainLogo> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    double size = screenWidth ;
-    double logoSize = screenWidth < 700 ? 200 :
-    size * 0.3 >= 800 ? 800 : (size * 0.8 <= 200 ? 200 : size * 0.8) - 350;
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.all(20),
-        margin: const EdgeInsets.all(10),
+        padding: EdgeInsets.all( screenWidth < 500 ? 0 : 20),
+
+        margin: const EdgeInsets.only(top: 80),
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(30)),
-          color: AppColors.mainLogoFill,
+          color: screenWidth < 500 ? Colors.transparent : AppColors.mainLogoFill,
         ),
         constraints: const BoxConstraints(maxWidth: 400, maxHeight: 730),
         child: Column(
@@ -40,9 +38,10 @@ class _CenterMainLogoState extends State<CenterMainLogo> {
               alignment: Alignment.topCenter,
               child: Column(
                 children: [
+                  // const SizedBox(height: 20),
                   Container(
-                    width: logoSize,
-                    height: logoSize,
+                    width: screenWidth < 500 ? 220 : 300,
+                    height: screenWidth < 500 ? 225 : 310,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("assets/logo_back.png"),
@@ -58,8 +57,8 @@ class _CenterMainLogoState extends State<CenterMainLogo> {
                           S.of(context).helloWords,
                           style: GoogleFonts.montserrat(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
+                            fontSize: screenWidth < 600 ? 16:20,
+                            fontWeight: FontWeight.w500,
                           ),
                           textAlign: TextAlign.center,
                         ),
@@ -68,8 +67,8 @@ class _CenterMainLogoState extends State<CenterMainLogo> {
                           S.of(context).toAccessAdvancedFeaturesDownloadTheApp,
                           style: GoogleFonts.montserrat(
                             color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w400,
+                            fontSize: screenWidth < 600 ? 16:20,
+                            fontWeight: FontWeight.w500,
                           ),
                           textAlign: TextAlign.center,
                         ),

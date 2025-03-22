@@ -21,48 +21,45 @@ class _TextButtonTypeOneGradientState extends State<TextButtonTypeOneGradient> {
 
     double screenWidth = MediaQuery.of(context).size.width;
     return MouseRegion(
+      cursor: SystemMouseCursors.click,
       onEnter: (_) => setState(() => isHovered = true),
       onExit: (_) => setState(() => isHovered = false),
       child: GestureDetector(
+        onTap: () => widget.onPressed(),
         onTapDown: (_) => setState(() => isPressed = true),
         onTapUp: (_) => setState(() => isPressed = false),
         onTapCancel: () => setState(() => isPressed = false),
-        child: InkWell(
-          onTap: () => widget.onPressed(),
-          borderRadius: BorderRadius.circular(30), // Закругление углов
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            decoration: BoxDecoration(
-              gradient: isPressed
-                  ? LinearGradient(
-                colors: [Colors.white, Colors.white], // Градиент для isPressed
-              )
-                  : isHovered
-                  ? LinearGradient(
-                colors: [const Color(0xff073D9B), const Color(0xff001F3F)], // Градиент для isHovered
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-                  : LinearGradient(
-                colors: [AppColors.textBtnTypeOneGradientStart, AppColors.textBtnTypeOneGradientEnd], // Градиент по умолчанию
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(30), // Закругление углов
-              border: Border.all(
-                color: const Color(0xff1C54B5), // Цвет границы
-                width: 2,
-              ),
+        child: Container(
+          margin: const EdgeInsets.all(5),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            gradient: isPressed
+                ? const LinearGradient(
+              colors: [Colors.white, Colors.white], // Градиент для isPressed
+            )
+                : isHovered
+                ? const LinearGradient(
+              colors: [Color(0xff073D9B), Color(0xff001F3F)], // Градиент для isHovered
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+                : LinearGradient(
+              colors: [AppColors.textBtnTypeOneGradientStart, AppColors.textBtnTypeOneGradientEnd], // Градиент по умолчанию
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(30), // Закругление углов
+        
+          ),
+          child: Center(
             child: Text(
               widget.text,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
                 color: isPressed ? const Color(0xff1C54B5) : AppColors.primary,
-                fontSize: 18.5,
+                fontSize: screenWidth < 900 ? 16 : 18.5,
                 height: 1.0,
                 fontWeight: FontWeight.w500,
               ),

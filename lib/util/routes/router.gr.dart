@@ -27,9 +27,14 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     AuthorizationRoute.name: (routeData) {
+      final args = routeData.argsAs<AuthorizationRouteArgs>(
+          orElse: () => const AuthorizationRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AuthorizationScreen(),
+        child: AuthorizationScreen(
+          key: args.key,
+          unAuthMessage: args.unAuthMessage,
+        ),
       );
     },
     DoneRoute.name: (routeData) {
@@ -159,16 +164,40 @@ class AccountManagementRouteArgs {
 
 /// generated route for
 /// [AuthorizationScreen]
-class AuthorizationRoute extends PageRouteInfo<void> {
-  const AuthorizationRoute({List<PageRouteInfo>? children})
-      : super(
+class AuthorizationRoute extends PageRouteInfo<AuthorizationRouteArgs> {
+  AuthorizationRoute({
+    Key? key,
+    ChatMessage? unAuthMessage,
+    List<PageRouteInfo>? children,
+  }) : super(
           AuthorizationRoute.name,
+          args: AuthorizationRouteArgs(
+            key: key,
+            unAuthMessage: unAuthMessage,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'AuthorizationRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<AuthorizationRouteArgs> page =
+      PageInfo<AuthorizationRouteArgs>(name);
+}
+
+class AuthorizationRouteArgs {
+  const AuthorizationRouteArgs({
+    this.key,
+    this.unAuthMessage,
+  });
+
+  final Key? key;
+
+  final ChatMessage? unAuthMessage;
+
+  @override
+  String toString() {
+    return 'AuthorizationRouteArgs{key: $key, unAuthMessage: $unAuthMessage}';
+  }
 }
 
 /// generated route for

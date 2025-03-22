@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:ed_helper_web/common/widgets/app_widgets/toggle_button.dart';
 import 'package:ed_helper_web/common/widgets/button/text_button_type_one.dart';
-import 'package:ed_helper_web/common/widgets/dialog/activate_rates_detail.dart';
 import 'package:ed_helper_web/common/widgets/dialog/canceled_subscribe.dart';
 import 'package:ed_helper_web/data/models/user/user_model.dart';
 import 'package:ed_helper_web/data/repositories/ed_helper/user_repository.dart';
@@ -55,7 +54,6 @@ class _RatesScreenState extends State<RatesScreen> {
   }
 
   Future<void> _initializeUser() async {
-    // widget.authUser = await userRepository.getUser();
     if (widget.authUser == null) {
       AutoRouter.of(context).back();
     } else {
@@ -126,21 +124,18 @@ class _RatesScreenState extends State<RatesScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Transform.translate(
-                            offset: const Offset(-160, 0),
-                            child: Text(
-                              S.of(context).nowTariff,
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black),
-                            ),
+                          Text(
+                            S.of(context).nowTariff,
+                            style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black),
                           ),
                           const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Wrap(
+                            alignment: WrapAlignment.center,
                             spacing: 20,
+                            runSpacing: 20,
                             children: [
                               Container(
                                   constraints: const BoxConstraints(
@@ -155,7 +150,9 @@ class _RatesScreenState extends State<RatesScreen> {
                                                   null)
                                               ? widget.authUser!.subscription!
                                                   .enTitle
-                                              : S.of(context).youDontHaveATariff,
+                                              : S
+                                                  .of(context)
+                                                  .youDontHaveATariff,
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.montserrat(
                                             fontSize: 25,
@@ -184,7 +181,7 @@ class _RatesScreenState extends State<RatesScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
-                                spacing: 20,
+                                spacing: 10,
                                 children: [
                                   SizedBox(
                                     width: screenWidth < 900 ? 250 : 300,
@@ -245,7 +242,7 @@ class _RatesScreenState extends State<RatesScreen> {
                       Container(
                         height: 70,
                         margin: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 20),
+                            vertical: 10, horizontal: 10),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 5),
                         decoration: BoxDecoration(
@@ -260,9 +257,7 @@ class _RatesScreenState extends State<RatesScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                // _mainScrollController.animateTo(0,
-                                //     duration: const Duration(milliseconds: 500),
-                                //     curve: Curves.easeOut);
+                                AutoRouter.of(context).push(HomeRoute());
                               },
                               child: MouseRegion(
                                 cursor: SystemMouseCursors.click,
@@ -276,19 +271,23 @@ class _RatesScreenState extends State<RatesScreen> {
                                 ? Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                        TextButtonTypeOneGradient(
-                                            text: S.of(context).home,
-                                            onPressed: () {
-                                              // _mainScrollController.animateTo(0,
-                                              //     duration: const Duration(milliseconds: 500),
-                                              //     curve: Curves.easeOut);
-                                            }),
-                                        TextButtonTypeTwoGradient(
-                                            text: S.of(context).chat,
-                                            onPressed: () {
-                                              AutoRouter.of(context)
-                                                  .push(HomeRoute());
-                                            }),
+                                        SizedBox(
+                                          height: 55,
+                                          child: TextButtonTypeOneGradient(
+                                              text: S.of(context).home,
+                                              onPressed: () {
+                                                AutoRouter.of(context).popUntilRouteWithName(HomeRoute.name);
+                                              }),
+                                        ),
+                                        SizedBox(
+                                          height: 55,
+                                          child: TextButtonTypeTwoGradient(
+                                              text: S.of(context).chat,
+                                              onPressed: () {
+                                                AutoRouter.of(context)
+                                                    .push(HomeRoute());
+                                              }),
+                                        ),
                                         GestureDetector(
                                           onTap: () {
                                             AutoRouter.of(context)
@@ -332,7 +331,7 @@ class _RatesScreenState extends State<RatesScreen> {
                           ],
                         ),
                       ),
-                      Row(
+                      if (screenWidth > 500)Row(
                         children: [
                           IconButton(
                             onPressed: () {

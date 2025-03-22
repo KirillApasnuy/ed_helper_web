@@ -29,7 +29,23 @@ class Subscription {
     required this.tts,
   });
 
-  factory Subscription.fromJson(Map<String, dynamic> json) => _$SubscriptionFromJson(json);
+  factory Subscription.fromJson(Map<String, dynamic> json) => Subscription(
+    id: (json['id'] as num).toInt(),
+    ruTitle: json['ruTitle'] as String,
+    enTitle: json['enTitle'] as String,
+    limitGenerations: (json['limitGenerations'] as num).toInt(),
+    ruBenefits: (json['ruBenefits'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList(),
+    enBenefits: (json['enBenefits'] as List<dynamic>)
+        .map((e) => e as String)
+        .toList(),
+    amountPerMonth: (json['amountPerMonth'] as num).toDouble(),
+    amountPerMonthInYear: (json['amountPerMonthInYear'] as num).toDouble(),
+    accessInGroup: json['accessInGroup'] as bool? ?? false,
+    premium: json['premium'] as bool? ?? false,
+    tts: json['tts'] as bool? ?? false,
+  );
 
   Map<String, dynamic> toJson() => _$SubscriptionToJson(this);
 }

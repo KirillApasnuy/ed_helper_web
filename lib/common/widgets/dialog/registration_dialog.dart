@@ -18,17 +18,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../data/models/chat_message/chat_message.dart';
 import '../../../data/models/gpt_answer/auth/auth_model.dart';
 import '../../../generated/l10n.dart';
 import 'error_dialog.dart';
 
 class RegistrationDialog extends StatefulWidget {
   RegistrationDialog(
-      {super.key, required this.isLogin, required this.onChanged});
+      {super.key, required this.isLogin, required this.onChanged, this.unAuthMessage});
 
   bool isLogin;
   final ValueChanged<bool> onChanged;
-
+  final ChatMessage? unAuthMessage;
   @override
   State<RegistrationDialog> createState() => _RegistrationDialogState();
 }
@@ -47,6 +48,7 @@ class _RegistrationDialogState extends State<RegistrationDialog>
   bool isGetNews = false;
   bool isAgreement = false;
   bool isValidAgreement = true;
+  bool isLoading = false;
 
   final String vkClientId =
   dotenv.env['oauth_vk_client_id']!; // ID VK-приложения
@@ -102,10 +104,6 @@ class _RegistrationDialogState extends State<RegistrationDialog>
   // );
 
   Future<void> _onPressedRegBtn() async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => const VerifyEmail(),
-    );
     if (!_key.currentState!.validate()) return;
 
     if (!isAgreement) {
@@ -113,13 +111,11 @@ class _RegistrationDialogState extends State<RegistrationDialog>
       setState(() {
         isValidAgreement = false;
       });
-      print(1);
       return;
     }
 
-    print(12);
     setState(() {
-      isValidAgreement = true;
+      isLoading = true;
     });
 
     AuthModel authModel = AuthModel(
@@ -131,11 +127,17 @@ class _RegistrationDialogState extends State<RegistrationDialog>
       if (response.statusCode == 200) {
         showDialog(
           context: context,
-          builder: (BuildContext context) => const VerifyEmail(),
+          builder: (BuildContext context) => VerifyEmail(unAuthMessage: widget.unAuthMessage,),
         ).then((_) {
           print('VerifyEmail dialog closed'); // Логирование закрытия диалога
         });
+        setState(() {
+          isLoading = true;
+        });
       } else {
+        setState(() {
+          isLoading = true;
+        });
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -145,6 +147,9 @@ class _RegistrationDialogState extends State<RegistrationDialog>
             });
       }
     } catch (e) {
+      setState(() {
+        isLoading = true;
+      });
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -263,13 +268,15 @@ class _RegistrationDialogState extends State<RegistrationDialog>
         .height;
 
     return Container(
-      constraints: const BoxConstraints(
-        maxWidth: 550,
+      constraints: BoxConstraints(
+        maxWidth: 550, // Максимальная ширина
+        minWidth: screenWidth < 600 ? screenWidth * 0.8 : 300, // Минимальная ширина
       ),
+      margin: const EdgeInsets.symmetric(horizontal: 5),
       child: Form(
         key: _key,
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 50),
+          padding: EdgeInsets.symmetric(vertical: screenWidth < 600 ? 30 : 50, horizontal:screenWidth < 600 ? 0 : 50),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -295,13 +302,15 @@ class _RegistrationDialogState extends State<RegistrationDialog>
                   children: [
                     SwitcherTypeOne(
                         value: isGetNews, onChanged: updateIsAgreement),
-                    Text(S
-                        .of(context)
-                        .getNews,
-                        style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w400)),
+                    Flexible(
+                      child: Text(S
+                          .of(context)
+                          .getNews,
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400)),
+                    ),
                   ],
                 ),
               ),
@@ -373,24 +382,28 @@ class _RegistrationDialogState extends State<RegistrationDialog>
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                spacing: 8,
                 children: [
                   TextButtonTypeOne(
                       text: S
                           .of(context)
                           .register,
-                      onPressed: () => _onPressedRegBtn()),
-                  MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () => _onPressedLogBtn(),
-                      child: Text(
-                        S
-                            .of(context)
-                            .haveAccount,
-                        style: GoogleFonts.montserrat(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: screenWidth < 900 ? 14 : 16),
+                      onPressed: () => _onPressedRegBtn(),
+                  isLoading: isLoading,),
+                  Flexible(
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () => _onPressedLogBtn(),
+                        child: Text(
+                          S
+                              .of(context)
+                              .haveAccount,
+                          style: GoogleFonts.montserrat(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w500,
+                              fontSize: screenWidth < 900 ? 14 : 16),
+                        ),
                       ),
                     ),
                   ),

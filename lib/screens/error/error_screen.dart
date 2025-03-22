@@ -31,23 +31,23 @@ class _ErrorScreenState extends State<ErrorScreen> {
               left: 0,
               child: Stack(
                 children: [
-                  Container(
-                    height: 500,
-                    width: 500,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                          "assets/logo_background_1.png",
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 600,
-                    width: 600,
-                    color: AppColors.backgroundScreen.withOpacity(0.95),
-                  ),
+                  // Container(
+                  //   height: 500,
+                  //   width: 500,
+                  //   decoration: BoxDecoration(
+                  //     image: DecorationImage(
+                  //       image: AssetImage(
+                  //         "assets/logo_background_1.png",
+                  //       ),
+                  //       fit: BoxFit.cover,
+                  //     ),
+                  //   ),
+                  // ),
+                  // Container(
+                  //   height: 600,
+                  //   width: 600,
+                  //   color: AppColors.backgroundScreen.withOpacity(0.95),
+                  // ),
                 ],
               ),
             ),

@@ -10,7 +10,7 @@ class AuthGuard extends AutoRouteGuard {
     isAuthenticated().then((authenticated) {
       if (!authenticated) {
         print('guard');
-        router.replace(const AuthorizationRoute());
+        router.replace(AuthorizationRoute());
         // router.replace(const AppErrorRoute());
       } else {
         resolver.next();

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dio/dio.dart';
 import 'package:ed_helper_web/common/widgets/button/text_button_type_one.dart';
 import 'package:ed_helper_web/common/widgets/button/text_button_type_two.dart';
+import 'package:ed_helper_web/common/widgets/dialog/done_dialog.dart';
 import 'package:ed_helper_web/data/models/user/user_model.dart';
 import 'package:ed_helper_web/data/repositories/ed_helper/subscribe_repository.dart';
 import 'package:ed_helper_web/util/constants/app_colors.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../generated/l10n.dart';
+import 'error_dialog.dart';
 
 class CanceledSubscribe extends StatefulWidget {
   CanceledSubscribe({super.key, required this.onUserChange, required  this.authUser});
@@ -29,40 +31,45 @@ class _CanceledSubscribeState extends State<CanceledSubscribe> {
       widget.authUser.paidStartDate = null;
       widget.authUser.subscribeState = "UNSUBSCRIBED";
       widget.onUserChange!(widget.authUser);
-      AutoRouter.of(context)
-          .popAndPush(DoneRoute(title: S.of(context).subscribeSuccessCanceled));
+      Navigator.of(context).pop();
+      showDialog(context: context, builder: (context) => DoneDialog(title: S.of(context).subscribeSuccessCanceled));
     } else {
-      AutoRouter.of(context)
-          .popAndPush(ErrorRoute(title: "Ошибка отмены подписки", ));
+      Navigator.of(context).pop();
+      showDialog(context: context, builder: (context) => ErrorDialog(title: S.of(context).unsubscribeError));
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Dialog(
+
+        insetPadding: const EdgeInsets.all(8),
         child: Container(
       width: 550,
-      height: 150,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: AppColors.backgroundScreen,
       ),
       padding: const EdgeInsets.all(30),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        spacing: 16,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(S.of(context).warningWithCanceledSubscribe,
+              textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
                   fontSize: 18, fontWeight: FontWeight.w400)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+          Wrap(
+            spacing: 20,
+            runSpacing: 10,
             children: [
               TextButtonTypeOne(
+                mainAxisSize: (screenWidth < 445) ? MainAxisSize.max : MainAxisSize.min,
                   text: S.of(context).no,
                   onPressed: () async => Navigator.pop(context)),
-              const SizedBox(width: 20),
               TextButtonTypeTwo(
+                mainAxisSize: (screenWidth < 445) ? MainAxisSize.max : MainAxisSize.min,
                   text: S.of(context).canceledSubscribe,
                   onPressed: () async => _onPressedCanceledSubscribe()),
             ],

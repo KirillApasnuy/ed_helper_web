@@ -625,75 +625,75 @@ class S {
     );
   }
 
-  /// `Нет созданных чатов.`
+  /// `No chats created.`
   String get noChatHistory {
     return Intl.message(
-      'Нет созданных чатов.',
+      'No chats created.',
       name: 'noChatHistory',
       desc: '',
       args: [],
     );
   }
 
-  /// `Войти в аккаунт`
+  /// `Sign in to your account`
   String get logInAcc {
     return Intl.message(
-      'Войти в аккаунт',
+      'Sign in to your account',
       name: 'logInAcc',
       desc: '',
       args: [],
     );
   }
 
-  /// `История`
+  /// `History`
   String get history {
-    return Intl.message('История', name: 'history', desc: '', args: []);
+    return Intl.message('History', name: 'history', desc: '', args: []);
   }
 
-  /// `Создать чат`
+  /// `Create chat`
   String get createChat {
-    return Intl.message('Создать чат', name: 'createChat', desc: '', args: []);
+    return Intl.message('Create chat', name: 'createChat', desc: '', args: []);
   }
 
-  /// `Главная`
+  /// `Home`
   String get home {
-    return Intl.message('Главная', name: 'home', desc: '', args: []);
+    return Intl.message('Home', name: 'home', desc: '', args: []);
   }
 
-  /// `Чат`
+  /// `Chat`
   String get chat {
-    return Intl.message('Чат', name: 'chat', desc: '', args: []);
+    return Intl.message('Chat', name: 'chat', desc: '', args: []);
   }
 
-  /// `Все права защищены`
+  /// `All rights reserved`
   String get allRightsResevered {
     return Intl.message(
-      'Все права защищены',
+      'All rights reserved',
       name: 'allRightsResevered',
       desc: '',
       args: [],
     );
   }
 
-  /// `Контакты`
+  /// `Contacts`
   String get contacts {
-    return Intl.message('Контакты', name: 'contacts', desc: '', args: []);
+    return Intl.message('Contacts', name: 'contacts', desc: '', args: []);
   }
 
-  /// `Что говорят клиенты`
+  /// `What customers are saying`
   String get customersReviews {
     return Intl.message(
-      'Что говорят клиенты',
+      'What customers are saying',
       name: 'customersReviews',
       desc: '',
       args: [],
     );
   }
 
-  /// `Научитесь пользоваться за 30 секунд!`
+  /// `Learn how to use it in 30 seconds!`
   String get learnHowToUse {
     return Intl.message(
-      'Научитесь пользоваться за 30 секунд!',
+      'Learn how to use it in 30 seconds!',
       name: 'learnHowToUse',
       desc: '',
       args: [],
@@ -745,10 +745,10 @@ class S {
     );
   }
 
-  /// `Ask me anything about complex software and neural networks—I’ll help you figure it out. I can also add a GIF, video, or other media to my response. Got a screenshot? Attach it! What are you curious about?`
+  /// `No more searching through forums or YouTube.  I provide clear GIF instructions for a wide range of questions about neural networks and complex software. What do you need help with?`
   String get askMeAnythingAboutComplexSoftwareAndNeuralNetworksillHelp {
     return Intl.message(
-      'Ask me anything about complex software and neural networks—I’ll help you figure it out. I can also add a GIF, video, or other media to my response. Got a screenshot? Attach it! What are you curious about?',
+      'No more searching through forums or YouTube.  I provide clear GIF instructions for a wide range of questions about neural networks and complex software. What do you need help with?',
       name: 'askMeAnythingAboutComplexSoftwareAndNeuralNetworksillHelp',
       desc: '',
       args: [],
@@ -980,6 +980,445 @@ class S {
     return Intl.message(
       'Delete Failed',
       name: 'deleteFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Straight-to-the-point instructions – only precise steps for working with complex software:`
+  String
+  get straighttothepointInstructionsOnlyPreciseStepsForWorkingWithComplexSoftware {
+    return Intl.message(
+      'Straight-to-the-point instructions – only precise steps for working with complex software:',
+      name:
+          'straighttothepointInstructionsOnlyPreciseStepsForWorkingWithComplexSoftware',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select language`
+  String get selectLanguage {
+    return Intl.message(
+      'Select language',
+      name: 'selectLanguage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Annual`
+  String get annual {
+    return Intl.message('Annual', name: 'annual', desc: '', args: []);
+  }
+
+  /// `Monthly`
+  String get monthly {
+    return Intl.message('Monthly', name: 'monthly', desc: '', args: []);
+  }
+
+  /// `Unsubscribe error`
+  String get unsubscribeError {
+    return Intl.message(
+      'Unsubscribe error',
+      name: 'unsubscribeError',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `for working with`
+  String get forWorkingWith {
+    return Intl.message(
+      'for working with',
+      name: 'forWorkingWith',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to animate a character using AI?`
+  String get howToAnimateACharacterUsingAi {
+    return Intl.message(
+      'How to animate a character using AI?',
+      name: 'howToAnimateACharacterUsingAi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to create VFX graphics on an existing video?`
+  String get howToCreateVfxGraphicsOnAnExistingVideo {
+    return Intl.message(
+      'How to create VFX graphics on an existing video?',
+      name: 'howToCreateVfxGraphicsOnAnExistingVideo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to speed up modeling and rendering in 3ds Max?`
+  String get howToSpeedUpModelingAndRenderingIn3dsMax {
+    return Intl.message(
+      'How to speed up modeling and rendering in 3ds Max?',
+      name: 'howToSpeedUpModelingAndRenderingIn3dsMax',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Advanced animation tools in Blender??`
+  String get advancedAnimationToolsInBlender {
+    return Intl.message(
+      'Advanced animation tools in Blender??',
+      name: 'advancedAnimationToolsInBlender',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to generate concept art in Midjourney?`
+  String get howToGenerateConceptArtInMidjourney {
+    return Intl.message(
+      'How to generate concept art in Midjourney?',
+      name: 'howToGenerateConceptArtInMidjourney',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Instant Answers to Any Question`
+  String get instantAnswersToAnyQuestion {
+    return Intl.message(
+      'Instant Answers to Any Question',
+      name: 'instantAnswersToAnyQuestion',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ask a question – get an accurate answer in seconds`
+  String get askAQuestionGetAnAccurateAnswerInSeconds {
+    return Intl.message(
+      'Ask a question – get an accurate answer in seconds',
+      name: 'askAQuestionGetAnAccurateAnswerInSeconds',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Solutions Without Unnecessary Text`
+  String get clearSolutionsWithoutUnnecessaryText {
+    return Intl.message(
+      'Clear Solutions Without Unnecessary Text',
+      name: 'clearSolutionsWithoutUnnecessaryText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step-by-step GIF instructions instead of long videos and boring lectures`
+  String get stepbystepGifInstructionsInsteadOfLongVideosAndBoringLectures {
+    return Intl.message(
+      'Step-by-step GIF instructions instead of long videos and boring lectures',
+      name: 'stepbystepGifInstructionsInsteadOfLongVideosAndBoringLectures',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `24/7 Support with No Waiting`
+  String get supportWithNoWaiting {
+    return Intl.message(
+      '24/7 Support with No Waiting',
+      name: 'supportWithNoWaiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Help is always at hand whenever you need it`
+  String get helpIsAlwaysAtHandWheneverYouNeedIt {
+    return Intl.message(
+      'Help is always at hand whenever you need it',
+      name: 'helpIsAlwaysAtHandWheneverYouNeedIt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Easy File and Voice Message Sharing`
+  String get easyFileAndVoiceMessageSharing {
+    return Intl.message(
+      'Easy File and Voice Message Sharing',
+      name: 'easyFileAndVoiceMessageSharing',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Send screenshots, audio, and documents in one click – get a quick response`
+  String get sendScreenshotsAudioAndDocumentsInOneClickGetA {
+    return Intl.message(
+      'Send screenshots, audio, and documents in one click – get a quick response',
+      name: 'sendScreenshotsAudioAndDocumentsInOneClickGetA',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Automation for Work and Learning`
+  String get automationForWorkAndLearning {
+    return Intl.message(
+      'Automation for Work and Learning',
+      name: 'automationForWorkAndLearning',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fast file analysis, text generation, smart suggestions, translation, website analysis, and more`
+  String
+  get fastFileAnalysisTextGenerationSmartSuggestionsTranslationWebsiteAnalysis {
+    return Intl.message(
+      'Fast file analysis, text generation, smart suggestions, translation, website analysis, and more',
+      name:
+          'fastFileAnalysisTextGenerationSmartSuggestionsTranslationWebsiteAnalysis',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Time and Effort`
+  String get saveTimeAndEffort {
+    return Intl.message(
+      'Save Time and Effort',
+      name: 'saveTimeAndEffort',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Forget endless searches for information – solve tasks instantly`
+  String get forgetEndlessSearchesForInformationSolveTasksInstantly {
+    return Intl.message(
+      'Forget endless searches for information – solve tasks instantly',
+      name: 'forgetEndlessSearchesForInformationSolveTasksInstantly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Anna, 27 years old`
+  String get anna27YearsOld {
+    return Intl.message(
+      'Anna, 27 years old',
+      name: 'anna27YearsOld',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3D visualizer`
+  String get dVisualizer {
+    return Intl.message(
+      '3D visualizer',
+      name: 'dVisualizer',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I used to have to spend hours scouring forums, reading complex articles, and watching dozens of video tutorials to figure out 3ds Max. ED-helper has solved this problem! Now I can ask a question and get an accurate answer in a few seconds. My training has accelerated at least ten times!`
+  String get iUsedToHaveToSpendHoursScouringForumsReading {
+    return Intl.message(
+      'I used to have to spend hours scouring forums, reading complex articles, and watching dozens of video tutorials to figure out 3ds Max. ED-helper has solved this problem! Now I can ask a question and get an accurate answer in a few seconds. My training has accelerated at least ten times!',
+      name: 'iUsedToHaveToSpendHoursScouringForumsReading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Olga, 22 years old`
+  String get olga22YearsOld {
+    return Intl.message(
+      'Olga, 22 years old',
+      name: 'olga22YearsOld',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Student`
+  String get student {
+    return Intl.message('Student', name: 'student', desc: '', args: []);
+  }
+
+  /// `I'm studying to become an architect and started using ArchiCAD quite recently. Without the help of "Edik," as I affectionately call ED-Helper, I think I would have been lost in a sea of video tutorials. Now any difficulty is solved instantly. Studying has become much more effective.`
+  String get imStudyingToBecomeAnArchitectAndStartedUsingArchicad {
+    return Intl.message(
+      'I\'m studying to become an architect and started using ArchiCAD quite recently. Without the help of "Edik," as I affectionately call ED-Helper, I think I would have been lost in a sea of video tutorials. Now any difficulty is solved instantly. Studying has become much more effective.',
+      name: 'imStudyingToBecomeAnArchitectAndStartedUsingArchicad',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `It's great when a neural network PERFECTLY teaches you how to use any neural network.  I mastered Midjourney, Krea, RunWay in ONE day! Without any training costs and a long search for information. ED-helper has made the process easy and enjoyable. I feel like I'm growing professionally every day!`
+  String get itsGreatWhenANeuralNetworkPerfectlyTeachesYouHow {
+    return Intl.message(
+      'It\'s great when a neural network PERFECTLY teaches you how to use any neural network.  I mastered Midjourney, Krea, RunWay in ONE day! Without any training costs and a long search for information. ED-helper has made the process easy and enjoyable. I feel like I\'m growing professionally every day!',
+      name: 'itsGreatWhenANeuralNetworkPerfectlyTeachesYouHow',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Neural Network Specialist`
+  String get neuralNetworkSpecialist {
+    return Intl.message(
+      'Neural Network Specialist',
+      name: 'neuralNetworkSpecialist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ekaterina, 25 years old`
+  String get ekaterina25YearsOld {
+    return Intl.message(
+      'Ekaterina, 25 years old',
+      name: 'ekaterina25YearsOld',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `I work with Unreal Engine 5, and I used to constantly waste time dealing with technical nuances. Redhelper has become a real find! He saved me a lot of time and nerves, and projects are moving much faster now.`
+  String get iWorkWithUnrealEngine5AndIUsedTo {
+    return Intl.message(
+      'I work with Unreal Engine 5, and I used to constantly waste time dealing with technical nuances. Redhelper has become a real find! He saved me a lot of time and nerves, and projects are moving much faster now.',
+      name: 'iWorkWithUnrealEngine5AndIUsedTo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VFX artist`
+  String get vfxArtist {
+    return Intl.message('VFX artist', name: 'vfxArtist', desc: '', args: []);
+  }
+
+  /// `Khizri, 30 years old`
+  String get khizri30YearsOld {
+    return Intl.message(
+      'Khizri, 30 years old',
+      name: 'khizri30YearsOld',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Revit has always seemed complicated, and I've spent my evenings looking for solutions to minor problems. Thanks to ED-Helper, I get the necessary instructions at the touch of a button. Even complex topics are explained so clearly that I quickly solve work tasks.`
+  String get revitHasAlwaysSeemedComplicatedAndIveSpentMyEvenings {
+    return Intl.message(
+      'Revit has always seemed complicated, and I\'ve spent my evenings looking for solutions to minor problems. Thanks to ED-Helper, I get the necessary instructions at the touch of a button. Even complex topics are explained so clearly that I quickly solve work tasks.',
+      name: 'revitHasAlwaysSeemedComplicatedAndIveSpentMyEvenings',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Architect`
+  String get architect {
+    return Intl.message('Architect', name: 'architect', desc: '', args: []);
+  }
+
+  /// `Aleksey, 34 years old`
+  String get aleksey34YearsOld {
+    return Intl.message(
+      'Aleksey, 34 years old',
+      name: 'aleksey34YearsOld',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `neural networks and advanced software`
+  String get neuralNetworksAndAdvancedSoftware {
+    return Intl.message(
+      'neural networks and advanced software',
+      name: 'neuralNetworksAndAdvancedSoftware',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Account not found`
+  String get accountNotFound {
+    return Intl.message(
+      'Account not found',
+      name: 'accountNotFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invalid Code`
+  String get invalidCode {
+    return Intl.message(
+      'Invalid Code',
+      name: 'invalidCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Password changed successfully!`
+  String get passwordChangedSuccessfully {
+    return Intl.message(
+      'Password changed successfully!',
+      name: 'passwordChangedSuccessfully',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Something went wrong`
+  String get somethingWentWrong {
+    return Intl.message(
+      'Something went wrong',
+      name: 'somethingWentWrong',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Continue`
+  String get continuee {
+    return Intl.message('Continue', name: 'continuee', desc: '', args: []);
+  }
+
+  /// `Set`
+  String get set {
+    return Intl.message('Set', name: 'set', desc: '', args: []);
+  }
+
+  /// `Input new password`
+  String get inputNewPassword {
+    return Intl.message(
+      'Input new password',
+      name: 'inputNewPassword',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You have exceeded your monthly message limit or your subscription has expired.`
+  String get youHaveExceededYourMonthlyMessageLimitOrYourSubscription {
+    return Intl.message(
+      'You have exceeded your monthly message limit or your subscription has expired.',
+      name: 'youHaveExceededYourMonthlyMessageLimitOrYourSubscription',
       desc: '',
       args: [],
     );

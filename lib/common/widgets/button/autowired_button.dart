@@ -28,7 +28,7 @@ class _AutowiredButtonState extends State<AutowiredButton> {
             widget.title,
             textAlign: TextAlign.center,
             style:
-                GoogleFonts.montserrat(fontSize: 15, fontWeight: FontWeight.w500, color: Colors.black),
+                GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
 
           )),
     );

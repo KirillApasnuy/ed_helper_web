@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:gif_view/gif_view.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:photo_view/photo_view.dart'; // Для изображений
+import 'package:flutter/services.dart'; // Для обработки клавиш
 
 class ViewFile extends StatefulWidget {
   final ChatMessage? message;
@@ -17,14 +19,15 @@ class ViewFile extends StatefulWidget {
   State<ViewFile> createState() => _ViewFileState();
 }
 
-class _ViewFileState extends State<ViewFile>
-    with SingleTickerProviderStateMixin {
+class _ViewFileState extends State<ViewFile> with SingleTickerProviderStateMixin {
   bool isFullScreen = false;
-  double _scale = 1.0;
-  Offset _position = Offset.zero;
   bool _isPlaying = false;
   late GifController gifController;
   final String API_URL = dotenv.env['api_url']!;
+
+  // Масштабирование для GIF
+  double _gifScale = 1.0;
+  final TransformationController _transformationController = TransformationController();
 
   void toggleAnimation() {
     if (gifController.isPlaying) {
@@ -43,108 +46,100 @@ class _ViewFileState extends State<ViewFile>
     gifController = GifController();
   }
 
+  // Обработка масштабирования колесом мыши
+  void _handleMouseWheel(PointerSignalEvent event) {
+    if (event is PointerScrollEvent) {
+      setState(() {
+        if (event.scrollDelta.dy > 0) {
+          _gifScale = (_gifScale * 0.9).clamp(0.5, 4.0); // Уменьшение масштаба
+        } else {
+          _gifScale = (_gifScale * 1.1).clamp(0.5, 4.0); // Увеличение масштаба
+        }
+        _transformationController.value = Matrix4.identity()..scale(_gifScale);
+      });
+    }
+  }
+
+  // Сброс масштаба
+  void _resetScale() {
+    setState(() {
+      _gifScale = 1.0;
+      _transformationController.value = Matrix4.identity();
+    });
+  }
+
   Widget _buildImage() {
     if (widget.message != null && widget.message!.imageUrl != null) {
-      return Image.network(
-        "${API_URL}/v1/media/user/${widget.message!.imageUrl}",
-        headers: {"Authorization": "Bearer ${widget.token}"},
+      return PhotoView(
+        imageProvider: NetworkImage(
+          "${API_URL}/v1/media/user/${widget.message!.imageUrl}",
+          headers: {"Authorization": "Bearer ${widget.token}"},
+        ),
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 2.0,
+        initialScale: PhotoViewComputedScale.contained,
+        basePosition: Alignment.center,
+        backgroundDecoration: const BoxDecoration(color: Colors.transparent),
       );
     } else if (widget.message != null && widget.message!.attachFile != null) {
-      return Image.memory(
-        widget.message!.attachFile!.bytes,
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          if (!_isPlaying) {
-            return child;
-          }
-          return child;
-        },
+      return PhotoView(
+        imageProvider: MemoryImage(widget.message!.attachFile!.bytes),
+        minScale: PhotoViewComputedScale.contained,
+        maxScale: PhotoViewComputedScale.covered * 2.0,
+        initialScale: PhotoViewComputedScale.contained,
+        basePosition: Alignment.center,
+        backgroundDecoration: const BoxDecoration(color: Colors.transparent),
       );
     } else {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
   }
 
   Widget _buildGif() {
-    return GestureDetector(
-      onTap: toggleAnimation,
-      child: Center(
-        child: GifView.network(
-          widget.media!,
-          controller: gifController,
-          autoPlay: false,
+    return Listener(
+      onPointerSignal: _handleMouseWheel, // Обработка колеса мыши
+      child: GestureDetector(
+        onDoubleTap: _resetScale, // Сброс масштаба по двойному нажатию
+        child: InteractiveViewer(
+          transformationController: _transformationController,
+          minScale: 0.5,
+          maxScale: 4.0,
+          child: Center(
+            child: GifView.network(
+              widget.media!,
+              controller: gifController,
+              autoPlay: false,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  // Сброс масштаба и позиции
-  void _handleMouseWheel(PointerEvent event) {
-    if (event is PointerScrollEvent) {
-      setState(() {
-        // Изменяем масштаб в зависимости от направления прокрутки
-        if (event.scrollDelta.dy > 0) {
-          _scale = (_scale * 0.9).clamp(1.0, 4.0); // Уменьшение масштаба
-        } else {
-          _scale = (_scale * 1.1).clamp(1.0, 4.0); // Увеличение масштаба
-        }
-      });
-    }
-  }
-
-  // Обработка перемещения изображения
-  void _handlePanUpdate(DragUpdateDetails details) {
-    setState(() {
-      _position += details.delta;
-    });
-  }
-
-  // Сброс масштаба и позиции
-  void _resetScaleAndPosition() {
-    setState(() {
-      _scale = 1.0;
-      _position = Offset.zero;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () async {
+      onTap: () {
         Navigator.pop(context);
       },
       child: Dialog(
         backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.zero,
         child: Stack(
           children: [
-            Listener(
-              onPointerSignal: (event) {
-                if (event is PointerScrollEvent) {
-                  _handleMouseWheel(event);
-                }
-              },
-              child: GestureDetector(
-                onDoubleTap: _resetScaleAndPosition, // Сброс масштаба и позиции по двойному нажатию
-                onPanUpdate: _handlePanUpdate,
-                child: Transform.scale(
-                  scale: _scale,
-                  child: Transform.translate(
-                    offset: _position,
-                    child: Center(
-                      child: widget.media != null && widget.media!.endsWith('.gif')
-                          ? _buildGif()
-                          : Center(child: _buildImage()),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Отображение GIF или изображения
+            if (widget.media != null && widget.media!.endsWith('.gif'))
+              _buildGif()
+            else
+              _buildImage(),
+
+            // Кнопка закрытия
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                onPressed: () async {
+                onPressed: () {
                   Navigator.pop(context);
                 },
                 icon: Icon(
@@ -158,6 +153,8 @@ class _ViewFileState extends State<ViewFile>
                 splashColor: Colors.black,
               ),
             ),
+
+            // Кнопка воспроизведения/паузы для GIF
             if (widget.media != null && widget.media!.endsWith('.gif'))
               Align(
                 alignment: Alignment.center,
@@ -169,13 +166,11 @@ class _ViewFileState extends State<ViewFile>
                       backgroundColor: const Color(0xff77ADED),
                     ),
                     icon: SizedBox(
-                      width: 100,
-                      height: 100,
+                      width: screenWidth < 600 ? 35 : 100,
+                      height: screenWidth < 600 ? 35 : 100,
                       child: Icon(
-                        _isPlaying
-                            ? Iconsax.pause_circle5
-                            : Iconsax.play_cricle5,
-                        size: 80,
+                        _isPlaying ? Iconsax.pause_circle5 : Iconsax.play_cricle5,
+                        size: screenWidth < 600 ? 30 : 80,
                         color: Colors.white,
                       ),
                     ),

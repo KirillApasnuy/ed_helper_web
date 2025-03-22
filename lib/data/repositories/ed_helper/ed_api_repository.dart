@@ -25,9 +25,9 @@ class EdApiRepository {
       "assistantId": 4,
       "imageUrl": message.imageUrl,
       "audioUrl": message.audioUrl,
-      if (message.attachFile != null)
-        "imageInBase64": base64Encode(message.attachFile!.bytes),
           };
+
+    if (message.attachFile != null) requestBody["imageInBase64"] = "data:image/${message.attachFile!.fileName.split(".").last};base64,${base64Encode(message.attachFile!.bytes)}";
     print(requestBody["text"]);
     return await dio.post("${API_URL}/v1/message/send", options: Options(headers: {
       "Content-Type": "application/json",

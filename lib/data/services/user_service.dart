@@ -13,12 +13,10 @@ class UserService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     Response response;
     String userIp = await _deviceRepository.getDeviceIp();
-    print(userIp);
     if (userIp == "") throw "Cannot retrieve IP Address";
     AuthModel newUser =
         AuthModel(email: "$userIp@edhelper.ai", password: userIp);
     response = await _authRepository.signUp(newUser);
-    print(response.statusCode);
     if (response.statusCode != 200) {
       response = await _authRepository.signIn(newUser);
     }

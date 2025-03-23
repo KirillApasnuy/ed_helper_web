@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:ed_helper_web/common/widgets/app_widgets/language_selector.dart';
 import 'package:ed_helper_web/common/widgets/button/text_button_type_two.dart';
 import 'package:ed_helper_web/common/widgets/dialog/error_dialog.dart';
 import 'package:ed_helper_web/data/models/user/user_model.dart';
@@ -9,8 +10,10 @@ import 'package:ed_helper_web/util/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../common/widgets/button/text_button_type_one.dart';
 import '../../common/widgets/button/text_button_type_one_gradient.dart';
 import '../../common/widgets/button/text_button_type_two_gradient.dart';
 import '../../common/widgets/pictures/svg_icons.dart';
@@ -30,11 +33,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final UserRepository userRepository = UserRepository();
   bool notAuth = true;
   bool isMenuVisible = false;
+  bool isEndSubscription = false;
   UserModel? authUser;
+  late final formattedDate;
 
   void userUpdate(UserModel user) {
     authUser = user;
     setState(() {});
+  }
+
+  void _isAuthUser() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      notAuth = prefs.getBool('notAuth') ?? true;
+    });
   }
 
   Future<void> _onPressSubscribeManagmentBtn() async {
@@ -44,8 +56,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       showDialog(
           context: context,
-          builder: (context) => ErrorDialog(
-                title: S.of(context).yourAccountIsNotConnected,
+          builder: (context) =>
+              ErrorDialog(
+                title: S
+                    .of(context)
+                    .yourAccountIsNotConnected,
               ));
     }
   }
@@ -56,8 +71,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       showDialog(
           context: context,
-          builder: (context) => ErrorDialog(
-                title: S.of(context).yourAccountIsNotConnected,
+          builder: (context) =>
+              ErrorDialog(
+                title: S
+                    .of(context)
+                    .yourAccountIsNotConnected,
               ));
     }
   }
@@ -67,9 +85,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (authUser == null) {
       showDialog(
           context: context,
-          builder: (context) => ErrorDialog(
-                title: S.of(context).errorLoadingUser,
+          builder: (context) =>
+              ErrorDialog(
+                title: S
+                    .of(context)
+                    .errorLoadingUser,
               ));
+    }
+    if (authUser!.paidEndDate != null) {
+      if (DateTime.parse(authUser!.paidEndDate!).isBefore(DateTime.now()) ||
+          authUser!.subscription!.limitGenerations <
+              authUser!.countGenerationInLastMonth) {
+        final dateString = authUser!.paidEndDate!;
+        final parsedDate = DateTime.parse(dateString);
+        formattedDate = DateFormat('dd.MM.yyyy').format(parsedDate);
+        setState(() {
+          isEndSubscription = true;
+        });
+      }
     }
     setState(() {});
   }
@@ -77,13 +110,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     _initializeUser();
+    _isAuthUser();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
+    double screenHeight = MediaQuery
+        .of(context)
+        .size
+        .height;
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -113,17 +153,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              notAuth ? Align(
+              notAuth
+                  ? Align(
                 alignment: Alignment.center,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 300,),
-                    Icon(Iconsax.add)
-                  ],
+                child: Container(
+                  constraints: const BoxConstraints(
+                    maxWidth: 400,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 20,
+                    children: [
+                      const SizedBox(
+                        height: 300,
+                      ),
+                      Text(
+                        ";(",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "Пожалуйста, авторизуйтесь",
+                        style: GoogleFonts.montserrat(
+                            fontSize: 25, fontWeight: FontWeight.w400),
+                      ),
+                      TextButtonTypeOne(
+                          text: "Авторизоваться",
+                          onPressed: () =>
+                              AutoRouter.of(context)
+                                  .push(AuthorizationRoute())),
+                    ],
+                  ),
                 ),
-              ) : Center(
+              )
+                  : Center(
                 child: Container(
                   constraints: const BoxConstraints(
                     maxWidth: 1200,
@@ -135,7 +199,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       const SizedBox(height: 120),
                       Text(
-                        S.of(context).profileTitle,
+                        S
+                            .of(context)
+                            .profileTitle,
                         style: GoogleFonts.montserrat(
                             fontSize: 25, fontWeight: FontWeight.bold),
                       ),
@@ -149,7 +215,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Center(
                           child: Text(
                             authUser != null
-                                ? authUser!.email.split("")[0].toUpperCase()
+                                ? authUser!.email
+                                .split("")[0]
+                                .toUpperCase()
                                 : "o",
                             style: GoogleFonts.montserrat(
                                 fontSize: 40,
@@ -164,14 +232,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               minWidth: 300, maxHeight: 200),
                           child: SubscribeCard(
                             isPremium: true,
+                            isEndSubscribed: isEndSubscription,
                             child: Column(
+                              spacing: 10,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 if (authUser != null)
                                   Text(
                                     (authUser?.subscription != null)
                                         ? authUser!.subscription!.enTitle
-                                        : S.of(context).youDontHaveATariff,
+                                        : S
+                                        .of(context)
+                                        .youDontHaveATariff,
                                     textAlign: TextAlign.center,
                                     style: GoogleFonts.montserrat(
                                       fontSize: 25,
@@ -179,24 +251,86 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       color: Colors.black,
                                     ),
                                   ),
-                                // if (authUser != null &&
-                                //     authUser!.subscribeState == "SUBSCRIBED")
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                // if (authUser != null &&
-                                //     authUser!.subscribeState == "SUBSCRIBED")
                                 Text(
-                                  S.of(context).nowTariff,
+                                  S
+                                      .of(context)
+                                      .nowTariff,
                                   style: GoogleFonts.montserrat(
                                     fontSize: 20,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
                                   ),
                                 ),
+                                if (isEndSubscription)
+                                  (authUser!.subscription!
+                                      .limitGenerations <
+                                      authUser!
+                                          .countGenerationInLastMonth)
+                                      ? Text(
+                                    S.of(context).theGenerationLimitHasBeenExhausted,
+                                    style: GoogleFonts.montserrat(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.red,
+                                    ),
+                                  )
+                                      : Row(
+                                    mainAxisSize:
+                                    MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        S.of(context).activeUntil,
+                                        style: GoogleFonts
+                                            .montserrat(
+                                          fontSize: 16,
+                                          fontWeight:
+                                          FontWeight.w400,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                      Text(
+                                        formattedDate,
+                                        style: GoogleFonts
+                                            .montserrat(
+                                          fontSize: 16,
+                                          fontWeight:
+                                          FontWeight.w500,
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  )
                               ],
                             ),
                           )),
+                      if (isEndSubscription) Container(
+                        constraints: const BoxConstraints(
+                          maxWidth: 270,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 8,),
+                            Text(
+                              S.of(context).subscriptionSuspendedToExtendItYouNeedTo,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Colors.red,
+                              ),
+                            ),
+                            Text(
+                              S.of(context).paySubscription,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       const SizedBox(
                         height: 15,
                       ),
@@ -206,7 +340,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             TextButtonTypeTwo(
-                              text: S.of(context).subsribeManagment,
+                              text: S
+                                  .of(context)
+                                  .subsribeManagment,
                               onPressed: () async =>
                                   _onPressSubscribeManagmentBtn(),
                               borderColor: AppColors.cardBorder,
@@ -217,7 +353,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               height: 15,
                             ),
                             TextButtonTypeTwo(
-                              text: S.of(context).accountManagment,
+                              text: S
+                                  .of(context)
+                                  .accountManagment,
                               onPressed: () async =>
                                   _onPressAccountManagmantBtn(),
                               borderColor: AppColors.cardBorder,
@@ -249,7 +387,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           border: Border.all(
                               color: AppColors.boxTitleBorder, width: 2),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(60)),
+                          const BorderRadius.all(Radius.circular(60)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -268,82 +406,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             screenWidth > 600
                                 ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                        SizedBox(
-                                          height: 55,
-                                          child: TextButtonTypeOneGradient(
-                                              text: S.of(context).home,
-                                              onPressed: () {
-                                                AutoRouter.of(context).pop();
-                                              }),
-                                        ),
-                                        SizedBox(
-                                          height: 55,
-                                          child: TextButtonTypeTwoGradient(
-                                              text: S.of(context).chat,
-                                              onPressed: () {
-                                                AutoRouter.of(context)
-                                                    .push(HomeRoute());
-                                              }),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            AutoRouter.of(context)
-                                                .replace(const ProfileRoute());
-                                          },
-                                          child: const MouseRegion(
-                                            cursor: SystemMouseCursors.click,
-                                            child: SvgIcons(
-                                                path:
-                                                    "assets/svg/select_profile_icon.svg",
-                                                size: 40),
-                                          ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            AutoRouter.of(context)
-                                                .replace(const ProfileRoute());
-                                          },
-                                          child: const MouseRegion(
-                                            cursor: SystemMouseCursors.click,
-                                            child: SvgIcons(
-                                                path: "assets/svg/land.svg",
-                                                size: 40),
-                                          ),
-                                        ),
-                                      ])
-                                : GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        isMenuVisible = !isMenuVisible;
-                                        print(isMenuVisible);
-                                      });
-                                    },
-                                    child: MouseRegion(
-                                        cursor: SystemMouseCursors.click,
-                                        child: SvgPicture.asset(
-                                          "assets/svg/title_menu.svg",
-                                          height: 40,
-                                        )),
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: 55,
+                                    child: TextButtonTypeOneGradient(
+                                        text: S
+                                            .of(context)
+                                            .home,
+                                        onPressed: () {
+                                          AutoRouter.of(context).pop();
+                                        }),
                                   ),
+                                  SizedBox(
+                                    height: 55,
+                                    child: TextButtonTypeTwoGradient(
+                                        text: S
+                                            .of(context)
+                                            .chat,
+                                        onPressed: () {
+                                          AutoRouter.of(context)
+                                              .push(HomeRoute());
+                                        }),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      AutoRouter.of(context)
+                                          .replace(const ProfileRoute());
+                                    },
+                                    child: const MouseRegion(
+                                      cursor: SystemMouseCursors.click,
+                                      child: SvgIcons(
+                                          path:
+                                          "assets/svg/select_profile_icon.svg",
+                                          size: 40),
+                                    ),
+                                  ),
+                                  LanguageSelector()
+                                ])
+                                : GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isMenuVisible = !isMenuVisible;
+                                  print(isMenuVisible);
+                                });
+                              },
+                              child: MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: SvgPicture.asset(
+                                    "assets/svg/title_menu.svg",
+                                    height: 40,
+                                  )),
+                            ),
                           ],
                         ),
                       ),
-                      if (screenWidth > 500) Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/svg/arrow_back.svg',
-                              width: 70,
-                              height: 70,
+                      if (screenWidth > 500)
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: SvgPicture.asset(
+                                'assets/svg/arrow_back.svg',
+                                width: 70,
+                                height: 70,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
+                          ],
+                        )
                     ],
                   ),
                 ),

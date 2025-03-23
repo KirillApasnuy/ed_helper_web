@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../common/widgets/app_widgets/language_selector.dart';
 import '../../common/widgets/button/text_button_type_one_gradient.dart';
 import '../../common/widgets/button/text_button_type_two_gradient.dart';
 import '../../common/widgets/card/history_card.dart';
@@ -172,7 +173,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                     child: TextButtonTypeOneGradient(
                                         text: S.of(context).home,
                                         onPressed: () {
-                                          AutoRouter.of(context).push(HomeRoute());
+                                          AutoRouter.of(context)
+                                              .push(HomeRoute());
                                         }),
                                   ),
                                   SizedBox(
@@ -197,18 +199,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                                           size: 40),
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      AutoRouter.of(context)
-                                          .push(const ProfileRoute());
-                                    },
-                                    child: const MouseRegion(
-                                      cursor: SystemMouseCursors.click,
-                                      child: SvgIcons(
-                                          path: "assets/svg/land.svg",
-                                          size: 40),
-                                    ),
-                                  ),
+                                  LanguageSelector()
                                 ])
                               : GestureDetector(
                                   onTap: () {
@@ -227,20 +218,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ],
                       ),
                     ),
-                    if (screenWidth > 600)Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: SvgPicture.asset(
-                            'assets/svg/arrow_back.svg',
-                            width: 70,
-                            height: 70,
+                    if (screenWidth > 600)
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: SvgPicture.asset(
+                              'assets/svg/arrow_back.svg',
+                              width: 70,
+                              height: 70,
+                            ),
                           ),
-                        ),
-                      ],
-                    )
+                        ],
+                      )
                   ],
                 ),
               ),

@@ -125,6 +125,7 @@ class _RegistrationDialogState extends State<RegistrationDialog>
 
     try {
       if (response.statusCode == 200) {
+
         showDialog(
           context: context,
           builder: (BuildContext context) => VerifyEmail(unAuthMessage: widget.unAuthMessage,),

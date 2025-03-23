@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../common/widgets/app_widgets/language_selector.dart';
 import '../../common/widgets/button/text_button_type_one_gradient.dart';
 import '../../common/widgets/button/text_button_type_two_gradient.dart';
 import '../../common/widgets/dialog/error_dialog.dart';
@@ -126,102 +127,110 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
             ),
             if (widget.authUser != null)
               Align(
-                alignment: Alignment.center,
+                  alignment: Alignment.center,
                   child: Container(
-                constraints: const BoxConstraints(maxWidth: 800),
-                margin: const EdgeInsets.all(10),
-                child: Column(
-                  spacing: 8,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 100,),
-                    Text(S.of(context).accountManagement,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.montserrat(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black)),
-
-                    const SizedBox(height: 20),
-                    Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      crossAxisAlignment: WrapCrossAlignment.end,
-                      runSpacing: 8,
-                      spacing: 50,
+                    constraints: const BoxConstraints(maxWidth: 800),
+                    margin: const EdgeInsets.all(10),
+                    child: Column(
+                      spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
-                          constraints: const BoxConstraints(maxWidth: 450),
-                            child: FormFieldTypeOne(
-                              controller: _emailController,
-                              labelText: S.of(context).email,
-                            )),
-                        Container(
-                          height: 50,
-                          constraints: const BoxConstraints(maxWidth: 450),
-                          child: TextButtonTypeTwo(
-                            mainAxisSize: screenWidth > 600 ? MainAxisSize.min: MainAxisSize.max,
-                              text: S.of(context).edit, onPressed: updateUser),
-                        )
-                      ],
-                    ),
-                    Wrap(
-                      alignment: WrapAlignment.spaceBetween,
-                      crossAxisAlignment: WrapCrossAlignment.end,
-                      runSpacing: 8,
-                      spacing: 50,
-
-                      children: [
-                        Container(
-                            constraints: const BoxConstraints(maxWidth: 450),
-                            child: FormFieldTypeOne(
-                              controller: _passwordController,
-                              labelText: S.of(context).password,
-                            )),
-                        Container(
-                          height: 50,
-                          constraints: const BoxConstraints(maxWidth: 450),
-                          child: TextButtonTypeTwo(
-                              mainAxisSize: screenWidth > 600 ? MainAxisSize.min: MainAxisSize.max,
-                              text: S.of(context).edit, onPressed: updateUser),
-                        )
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      runAlignment: WrapAlignment.start,
-                      alignment: WrapAlignment.start,
-                      runSpacing: 8,
-                      spacing: 50,
-                      children: [
-                        Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        const SizedBox(
+                          height: 100,
+                        ),
+                        Text(S.of(context).accountManagement,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black)),
+                        const SizedBox(height: 20),
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          runSpacing: 8,
+                          spacing: 50,
                           children: [
-                            Text(
-                              S.of(context).deleteAccountAndAllData,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: screenWidth < 900 ? 20 : 25),
-                            ),
-                            Text(
-                              S.of(context).thisActionIsIrreversible,
-                              style: GoogleFonts.montserrat(
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: screenWidth < 900 ? 17 : 20),
-                            ),
+                            Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 450),
+                                child: FormFieldTypeOne(
+                                  controller: _emailController,
+                                  labelText: S.of(context).email,
+                                )),
+                            Container(
+                              height: 50,
+                              constraints: const BoxConstraints(maxWidth: 450),
+                              child: TextButtonTypeTwo(
+                                  mainAxisSize: screenWidth > 600
+                                      ? MainAxisSize.min
+                                      : MainAxisSize.max,
+                                  text: S.of(context).edit,
+                                  onPressed: updateUser),
+                            )
                           ],
                         ),
-                        SizedBox(
-                            width: screenWidth < 900 ? 200 : 250,
-                            height: 50,
-                            child: TextButtonTypeTwo(
-                                text: S.of(context).deleteAccount,
-                                onPressed: deleteUser)),
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          runSpacing: 8,
+                          spacing: 50,
+                          children: [
+                            Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 450),
+                                child: FormFieldTypeOne(
+                                  controller: _passwordController,
+                                  labelText: S.of(context).password,
+                                )),
+                            Container(
+                              height: 50,
+                              constraints: const BoxConstraints(maxWidth: 450),
+                              child: TextButtonTypeTwo(
+                                  mainAxisSize: screenWidth > 600
+                                      ? MainAxisSize.min
+                                      : MainAxisSize.max,
+                                  text: S.of(context).edit,
+                                  onPressed: updateUser),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          runAlignment: WrapAlignment.start,
+                          alignment: WrapAlignment.start,
+                          runSpacing: 8,
+                          spacing: 50,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  S.of(context).deleteAccountAndAllData,
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: screenWidth < 900 ? 20 : 25),
+                                ),
+                                Text(
+                                  S.of(context).thisActionIsIrreversible,
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: screenWidth < 900 ? 17 : 20),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                                width: screenWidth < 900 ? 200 : 250,
+                                height: 50,
+                                child: TextButtonTypeTwo(
+                                    text: S.of(context).deleteAccount,
+                                    onPressed: deleteUser)),
+                          ],
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              )),
+                  )),
             Align(
               alignment: Alignment.topCenter,
               child: Container(
@@ -229,14 +238,13 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 child: Container(
                   height: 70,
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                   decoration: BoxDecoration(
                     color: AppColors.boxTitleFill,
-                    border: Border.all(
-                        color: AppColors.boxTitleBorder, width: 2),
-                    borderRadius:
-                        const BorderRadius.all(Radius.circular(60)),
+                    border:
+                        Border.all(color: AppColors.boxTitleBorder, width: 2),
+                    borderRadius: const BorderRadius.all(Radius.circular(60)),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -262,7 +270,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 child: TextButtonTypeOneGradient(
                                     text: S.of(context).home,
                                     onPressed: () {
-                                     AutoRouter.of(context).push(HomeRoute());
+                                      AutoRouter.of(context).push(HomeRoute());
                                     }),
                               ),
                               SizedBox(
@@ -270,8 +278,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                 child: TextButtonTypeTwoGradient(
                                     text: S.of(context).chat,
                                     onPressed: () {
-                                      AutoRouter.of(context)
-                                          .push(HomeRoute());
+                                      AutoRouter.of(context).push(HomeRoute());
                                     }),
                               ),
                               GestureDetector(
@@ -287,18 +294,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                                       size: 40),
                                 ),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  AutoRouter.of(context)
-                                      .push(const ProfileRoute());
-                                },
-                                child: const MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: SvgIcons(
-                                      path: "assets/svg/land.svg",
-                                      size: 40),
-                                ),
-                              ),
+                              LanguageSelector()
                             ])
                           : GestureDetector(
                               onTap: () {
@@ -319,22 +315,23 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                 ),
               ),
             ),
-            if (screenWidth > 550)Align(
-              alignment: Alignment.topLeft,
-              child: Container(
-                margin: const EdgeInsets.only(top: 70),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: SvgPicture.asset(
-                    'assets/svg/arrow_back.svg',
-                    width: 70,
-                    height: 70,
+            if (screenWidth > 550)
+              Align(
+                alignment: Alignment.topLeft,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 70),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: SvgPicture.asset(
+                      'assets/svg/arrow_back.svg',
+                      width: 70,
+                      height: 70,
+                    ),
                   ),
                 ),
               ),
-            ),
             AnimatedPositioned(
               duration: const Duration(milliseconds: 300),
               curve: Curves.easeInOut,

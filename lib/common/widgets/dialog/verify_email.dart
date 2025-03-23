@@ -34,6 +34,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     if (response.statusCode == 200) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('token', response.data);
+      prefs.setBool("notAuth", false);
       AutoRouter.of(context).replace(HomeRoute(message: widget.unAuthMessage), onFailure: (_) => AutoRouter.of(context).push(const AppErrorRoute()));
     }
     showDialog(

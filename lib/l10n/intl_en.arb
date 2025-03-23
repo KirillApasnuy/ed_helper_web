@@ -159,5 +159,9 @@
   "continuee": "Continue",
   "set": "Set",
   "inputNewPassword": "Input new password",
-  "youHaveExceededYourMonthlyMessageLimitOrYourSubscription": "You have exceeded your monthly message limit or your subscription has expired."
+  "youHaveExceededYourMonthlyMessageLimitOrYourSubscription": "You have exceeded your monthly message limit or your subscription has expired.",
+  "theGenerationLimitHasBeenExhausted": "The generation limit has been exhausted",
+  "activeUntil": "Active until:",
+  "subscriptionSuspendedToExtendItYouNeedTo": "Subscription suspended. To extend it you need to",
+  "paySubscription": "Pay subscription"
 }

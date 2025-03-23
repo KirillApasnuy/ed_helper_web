@@ -174,41 +174,39 @@ class _HomeSideBarState extends State<HomeSideBar> {
             ),
             Expanded(child:
             chatHistory.isNotEmpty
-                  ? Expanded(
-                child: Column(
-                  children: [
-                    FormFieldTypeOne(
-                      controller: searchController,
-                      onChanged: _handleSearch,
-                      maxLines: 1,
-                      hintText: "Search...",
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: isSearching
-                            ? searchResults.length
-                            : chatHistory.length,
-                        itemBuilder: (context, index) {
-                          final chat = isSearching
-                              ? searchResults[index]
-                              : chatHistory[index];
-                          return ChatTile(
-                            onSelectChat: (chatModel) {
-                              widget.onSelectChat(chatModel);
-                              setState(() {
-                                isSearching = false;
-                                searchController.clear();
-                              });
-                            },
-                            chatModel: chat,
-                            deleteChat: deleteChat,
-                          );
-                        },
+                  ? Column(
+                    children: [
+                      FormFieldTypeOne(
+                        controller: searchController,
+                        onChanged: _handleSearch,
+                        maxLines: 1,
+                        hintText: "Search...",
                       ),
-                    ),
-                  ],
-                ),
-              )
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: isSearching
+                              ? searchResults.length
+                              : chatHistory.length,
+                          itemBuilder: (context, index) {
+                            final chat = isSearching
+                                ? searchResults[index]
+                                : chatHistory[index];
+                            return ChatTile(
+                              onSelectChat: (chatModel) {
+                                widget.onSelectChat(chatModel);
+                                setState(() {
+                                  isSearching = false;
+                                  searchController.clear();
+                                });
+                              },
+                              chatModel: chat,
+                              deleteChat: deleteChat,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  )
                   : Column(
                 children: [
                   const SizedBox(height: 50),

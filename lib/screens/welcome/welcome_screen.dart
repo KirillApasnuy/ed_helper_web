@@ -127,10 +127,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> _startRecording() async {
-    if (await _verifyAuth()) {
-      userService.newUserWithIp();
-    }
-
     setState(() {
       isVoiceRecorder = true;
       isVoiceMessage = true;
@@ -189,9 +185,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Future<void> _onPressAttachBtn() async {
-    if (await _verifyAuth()) {
-      userService.newUserWithIp();
-    }
 
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       dialogTitle: "Выберите файл",

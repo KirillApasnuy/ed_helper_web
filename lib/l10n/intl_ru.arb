@@ -159,5 +159,9 @@
   "continuee": "Продолжить",
   "set": "Установить",
   "inputNewPassword": "Введите новый пароль",
-  "youHaveExceededYourMonthlyMessageLimitOrYourSubscription": "Вы превысили месячный лимит сообщений или срок вашей подписки истек."
+  "youHaveExceededYourMonthlyMessageLimitOrYourSubscription": "Вы превысили месячный лимит сообщений или срок вашей подписки истек.",
+  "theGenerationLimitHasBeenExhausted": "Лимит генерации исчерпан",
+  "activeUntil": "Активен до:",
+  "subscriptionSuspendedToExtendItYouNeedTo": "Подписка приостановлена. Чтобы продлить ее, вам необходимо",
+  "paySubscription": "Оплатить подписку"
 }

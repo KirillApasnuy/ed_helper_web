@@ -8,7 +8,9 @@ import 'package:ed_helper_web/screens/profile/widgets/subscribe_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
+import '../../common/widgets/app_widgets/language_selector.dart';
 import '../../common/widgets/button/text_button_type_one_gradient.dart';
 import '../../common/widgets/button/text_button_type_two.dart';
 import '../../common/widgets/button/text_button_type_two_gradient.dart';
@@ -35,6 +37,8 @@ class _RatesScreenState extends State<RatesScreen> {
   final UserRepository userRepository = UserRepository();
   bool isYearBilling = true;
   bool isMenuVisible = false;
+  bool isEndSubscription = false;
+  late final formattedDate;
 
   Future<void> _onPressHistoryBtn() async {
     AutoRouter.of(context).push(HistoryRoute(authUser: widget.authUser!));
@@ -57,6 +61,19 @@ class _RatesScreenState extends State<RatesScreen> {
     if (widget.authUser == null) {
       AutoRouter.of(context).back();
     } else {
+      if (widget.authUser!.paidEndDate != null) {
+        if (DateTime.parse(widget.authUser!.paidEndDate!)
+                .isBefore(DateTime.now()) ||
+            widget.authUser!.subscription!.limitGenerations <
+                widget.authUser!.countGenerationInLastMonth) {
+          final dateString = widget.authUser!.paidEndDate!;
+          final parsedDate = DateTime.parse(dateString);
+          formattedDate = DateFormat('dd.MM.yyyy').format(parsedDate);
+          setState(() {
+            isEndSubscription = true;
+          });
+        }
+      }
       setState(() {});
     }
   }
@@ -141,9 +158,15 @@ class _RatesScreenState extends State<RatesScreen> {
                                   constraints: const BoxConstraints(
                                       minWidth: 300, maxHeight: 200),
                                   child: SubscribeCard(
+                                    isEndSubscribed: isEndSubscription,
+                                    isPremium: widget
+                                            .authUser!.subscription?.premium ??
+                                        false,
                                     child: Column(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
+
+                                      spacing: 8,
                                       children: [
                                         Text(
                                           (widget.authUser!.subscription !=
@@ -162,19 +185,56 @@ class _RatesScreenState extends State<RatesScreen> {
                                         ),
                                         if (widget.authUser!.subscribeState !=
                                             "UNSUBSCRIBED")
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                        if (widget.authUser!.subscribeState !=
-                                            "UNSUBSCRIBED")
-                                          Text(
-                                            S.of(context).nowTariff,
-                                            style: GoogleFonts.montserrat(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
+                                          if (widget.authUser!.subscribeState !=
+                                              "UNSUBSCRIBED")
+                                            Text(
+                                              S.of(context).nowTariff,
+                                              style: GoogleFonts.montserrat(
+                                                fontSize: 20,
+                                                fontWeight: FontWeight.w500,
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
+                                        if (isEndSubscription)
+                                          (widget.authUser!.subscription!
+                                                      .limitGenerations <
+                                                  widget.authUser!
+                                                      .countGenerationInLastMonth)
+                                              ? Text(
+                                                  S.of(context).theGenerationLimitHasBeenExhausted,
+                                                  textAlign: TextAlign.center,
+                                                  style: GoogleFonts.montserrat(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Colors.red,
+                                                  ),
+                                                )
+                                              : Row(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Text(
+                                                      S.of(context).activeUntil,
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      formattedDate,
+                                                      style: GoogleFonts
+                                                          .montserrat(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
                                       ],
                                     ),
                                   )),
@@ -257,7 +317,7 @@ class _RatesScreenState extends State<RatesScreen> {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                AutoRouter.of(context).push(HomeRoute());
+                                AutoRouter.of(context).replace(HomeRoute());
                               },
                               child: MouseRegion(
                                 cursor: SystemMouseCursors.click,
@@ -276,7 +336,9 @@ class _RatesScreenState extends State<RatesScreen> {
                                           child: TextButtonTypeOneGradient(
                                               text: S.of(context).home,
                                               onPressed: () {
-                                                AutoRouter.of(context).popUntilRouteWithName(HomeRoute.name);
+                                                AutoRouter.of(context)
+                                                    .popUntilRouteWithName(
+                                                        HomeRoute.name);
                                               }),
                                         ),
                                         SizedBox(
@@ -301,24 +363,12 @@ class _RatesScreenState extends State<RatesScreen> {
                                                 size: 40),
                                           ),
                                         ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            AutoRouter.of(context)
-                                                .push(const ProfileRoute());
-                                          },
-                                          child: const MouseRegion(
-                                            cursor: SystemMouseCursors.click,
-                                            child: SvgIcons(
-                                                path: "assets/svg/land.svg",
-                                                size: 40),
-                                          ),
-                                        ),
+                                        LanguageSelector()
                                       ])
                                 : GestureDetector(
                                     onTap: () {
                                       setState(() {
                                         isMenuVisible = !isMenuVisible;
-                                        print(isMenuVisible);
                                       });
                                     },
                                     child: MouseRegion(
@@ -331,20 +381,21 @@ class _RatesScreenState extends State<RatesScreen> {
                           ],
                         ),
                       ),
-                      if (screenWidth > 500)Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            icon: SvgPicture.asset(
-                              'assets/svg/arrow_back.svg',
-                              width: 70,
-                              height: 70,
+                      if (screenWidth > 500)
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: SvgPicture.asset(
+                                'assets/svg/arrow_back.svg',
+                                width: 70,
+                                height: 70,
+                              ),
                             ),
-                          ),
-                        ],
-                      )
+                          ],
+                        )
                     ],
                   ),
                 ),

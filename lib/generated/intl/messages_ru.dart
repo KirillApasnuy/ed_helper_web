@@ -40,6 +40,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "activatePlanTitle": MessageLookupByLibrary.simpleMessage(
       "Активация тарифа",
     ),
+    "activeUntil": MessageLookupByLibrary.simpleMessage("Активен до:"),
     "addCard": MessageLookupByLibrary.simpleMessage("Привязать"),
     "addNewCard": MessageLookupByLibrary.simpleMessage("Привязать новую карту"),
     "advancedAnimationToolsInBlender": MessageLookupByLibrary.simpleMessage(
@@ -278,6 +279,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordChangedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Пароль успешно изменен!",
     ),
+    "paySubscription": MessageLookupByLibrary.simpleMessage(
+      "Оплатить подписку",
+    ),
     "pressKey": MessageLookupByLibrary.simpleMessage("Нажмите клавиши..."),
     "profile": MessageLookupByLibrary.simpleMessage("Профиль"),
     "profileTitle": MessageLookupByLibrary.simpleMessage("Личный кабинет"),
@@ -324,6 +328,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscribeSuccessCanceled": MessageLookupByLibrary.simpleMessage(
       "Подписка успешно отменена",
     ),
+    "subscriptionSuspendedToExtendItYouNeedTo":
+        MessageLookupByLibrary.simpleMessage(
+          "Подписка приостановлена. Чтобы продлить ее, вам необходимо",
+        ),
     "subsribeManagment": MessageLookupByLibrary.simpleMessage(
       "Управление подпиской",
     ),
@@ -335,6 +343,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "Поддержка 24/7 без ожидания",
     ),
     "textCoped": MessageLookupByLibrary.simpleMessage("Текст скопирован!"),
+    "theGenerationLimitHasBeenExhausted": MessageLookupByLibrary.simpleMessage(
+      "Лимит генерации исчерпан",
+    ),
     "thereWasAnError": MessageLookupByLibrary.simpleMessage("Произошла ошибка"),
     "thisActionIsIrreversible": MessageLookupByLibrary.simpleMessage(
       "Безвозвратное удаление данных\nи всего, что связано с аккаунтом",

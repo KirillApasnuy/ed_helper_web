@@ -8,7 +8,7 @@ import 'package:ed_helper_web/data/models/chat_message/chat_model.dart';
 import 'package:ed_helper_web/data/repositories/ed_helper/ed_api_repository.dart';
 import 'package:ed_helper_web/screens/home/widgets/center_chat.dart';
 import 'package:ed_helper_web/screens/home/widgets/center_main_logo.dart';
-import 'package:ed_helper_web/screens/home/widgets/side_bar.dart';
+import 'package:ed_helper_web/screens/home/widgets/home_side_bar.dart';
 import 'package:ed_helper_web/screens/welcome/widgets/side_bar.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';

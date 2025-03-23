@@ -26,12 +26,12 @@ class _CanceledSubscribeState extends State<CanceledSubscribe> {
   Future<void> _onPressedCanceledSubscribe() async {
     Response response = await _subscribeRepository.cancelSubscription();
     if (response.statusCode == 200) {
+      Navigator.of(context).pop();
       widget.authUser.subscription = null;
       widget.authUser.paidEndDate = null;
       widget.authUser.paidStartDate = null;
       widget.authUser.subscribeState = "UNSUBSCRIBED";
       widget.onUserChange!(widget.authUser);
-      Navigator.of(context).pop();
       showDialog(context: context, builder: (context) => DoneDialog(title: S.of(context).subscribeSuccessCanceled));
     } else {
       Navigator.of(context).pop();

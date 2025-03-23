@@ -31,6 +31,7 @@ class ToggleContainer extends StatefulWidget {
 
 class _ToggleContainerState extends State<ToggleContainer> {
   final SubscribeRepository _subscribeRepository = SubscribeRepository();
+  bool isLoading = false;
   List<Subscription> subscriptions = [];
 
   void initialize() async {
@@ -45,19 +46,27 @@ class _ToggleContainerState extends State<ToggleContainer> {
   }
 
   void _subscribe(Subscription subscription) async {
+    setState(() {
+      isLoading = true;
+    });
     Response response =
         await _subscribeRepository.subscribe(planId: subscription.id);
     if (response.statusCode == 200 || response.statusCode == 400) {
       widget.authUser.subscription = subscription;
       widget.authUser.subscribeState = "SUBSCRIBED";
       widget.onUserChanged(widget.authUser);
-      setState(() {});
+      setState(() {
+        isLoading = false;
+      });
       showDialog(
         context: context,
         builder: (context) =>
             const DoneDialog(title: "Вы успешно подписались!"),
       );
     } else {
+      setState(() {
+        isLoading = false;
+      });
       showDialog(
         context: context,
         builder: (context) => const ErrorDialog(title: "Ошибка при подписке!"),
@@ -141,8 +150,9 @@ class _ToggleContainerState extends State<ToggleContainer> {
                 spacing: 40,
                 runSpacing: 20,
                 children: [
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    runSpacing: 20,
                     spacing: 20,
                     children: subscriptions != []
                         ? subscriptions.map((subscription) {
@@ -183,6 +193,7 @@ class _ToggleContainerState extends State<ToggleContainer> {
                                       ),
                                       const SizedBox(height: 10),
                                       TextButtonTypeOne(
+                                        isLoading: isLoading,
                                           text:
                                               "${widget.isYearBilling ? isEnglish ? (subscription.amountPerMonthInYear / 100).toString() : subscription.amountPerMonthInYear.toString() : isEnglish ? (subscription.amountPerMonth / 100).toString() : subscription.amountPerMonth.toString()} ${isEnglish ? "\$" : "₽"}/${widget.isYearBilling ?
                                                   isEnglish ? "year" :"год"

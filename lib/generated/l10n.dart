@@ -1423,6 +1423,46 @@ class S {
       args: [],
     );
   }
+
+  /// `The generation limit has been exhausted`
+  String get theGenerationLimitHasBeenExhausted {
+    return Intl.message(
+      'The generation limit has been exhausted',
+      name: 'theGenerationLimitHasBeenExhausted',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Active until:`
+  String get activeUntil {
+    return Intl.message(
+      'Active until:',
+      name: 'activeUntil',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Subscription suspended. To extend it you need to`
+  String get subscriptionSuspendedToExtendItYouNeedTo {
+    return Intl.message(
+      'Subscription suspended. To extend it you need to',
+      name: 'subscriptionSuspendedToExtendItYouNeedTo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pay subscription`
+  String get paySubscription {
+    return Intl.message(
+      'Pay subscription',
+      name: 'paySubscription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

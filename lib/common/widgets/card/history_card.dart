@@ -15,7 +15,7 @@ class _HistoryCardState extends State<HistoryCard> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
-      margin: const EdgeInsets.only(bottom: 20,),
+      margin: const EdgeInsets.only(bottom: 20, left: 10, right: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),

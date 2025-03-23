@@ -62,7 +62,7 @@ class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
                   margin:
                       const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                   child: Row(
                     mainAxisAlignment: widget.suffixIcon != null
                         ? MainAxisAlignment.spaceBetween
@@ -80,7 +80,7 @@ class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
                                   widget.borderColor ??
                                   const Color(0xff1C54B5)
                               : AppColors.primary,
-                          fontSize: 18.5,
+                          fontSize: screenWidth < 900 ? 16 : 18.5,
                           height: 1.0,
                           fontWeight: FontWeight.w500,
                         ),

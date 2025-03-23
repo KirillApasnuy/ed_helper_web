@@ -11,6 +11,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -535,7 +536,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                               ],
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                 if (!widget.message.user)
                   Transform.translate(
                     offset: Offset(100, screenWidth < 600 ? 0 : -55),

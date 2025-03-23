@@ -22,7 +22,7 @@ class EdApiRepository {
       "text": message.text,
       "model": "gpt-4-turbo",
       "chatId": chatId,
-      "assistantId": 4,
+      "assistantId": 1,
       "imageUrl": message.imageUrl,
       "audioUrl": message.audioUrl,
           };

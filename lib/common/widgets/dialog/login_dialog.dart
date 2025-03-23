@@ -33,7 +33,6 @@ class _LoginDialogState extends State<LoginDialog> {
   bool isLoading = false;
 
   Future<void> _onPressedForgotPasswordBtn() async {
-    AutoRouter.of(context).pop();
     showDialog(
         context: context,
         builder: (BuildContext context) => const ForgotPassword());
@@ -58,6 +57,7 @@ class _LoginDialogState extends State<LoginDialog> {
         });
         print(response.data);
         await prefs.setString('token', response.data);
+        prefs.setBool("notAuth", false);
         AutoRouter.of(context).push(HomeRoute(message: widget.unAuthMessage));
       } else {
 

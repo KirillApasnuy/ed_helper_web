@@ -38,6 +38,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "activatePlanTitle": MessageLookupByLibrary.simpleMessage(
       "Plan Activation",
     ),
+    "activeUntil": MessageLookupByLibrary.simpleMessage("Active until:"),
     "addCard": MessageLookupByLibrary.simpleMessage("Link"),
     "addNewCard": MessageLookupByLibrary.simpleMessage("Add new card"),
     "advancedAnimationToolsInBlender": MessageLookupByLibrary.simpleMessage(
@@ -278,6 +279,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "passwordChangedSuccessfully": MessageLookupByLibrary.simpleMessage(
       "Password changed successfully!",
     ),
+    "paySubscription": MessageLookupByLibrary.simpleMessage("Pay subscription"),
     "pressKey": MessageLookupByLibrary.simpleMessage("Press key..."),
     "profile": MessageLookupByLibrary.simpleMessage("Profile"),
     "profileTitle": MessageLookupByLibrary.simpleMessage("Account"),
@@ -322,6 +324,10 @@ class MessageLookup extends MessageLookupByLibrary {
     "subscribeSuccessCanceled": MessageLookupByLibrary.simpleMessage(
       "Subscription successfully canceled",
     ),
+    "subscriptionSuspendedToExtendItYouNeedTo":
+        MessageLookupByLibrary.simpleMessage(
+          "Subscription suspended. To extend it you need to",
+        ),
     "subsribeManagment": MessageLookupByLibrary.simpleMessage(
       "Manage Subscription",
     ),
@@ -333,6 +339,9 @@ class MessageLookup extends MessageLookupByLibrary {
       "24/7 Support with No Waiting",
     ),
     "textCoped": MessageLookupByLibrary.simpleMessage("Coped text!"),
+    "theGenerationLimitHasBeenExhausted": MessageLookupByLibrary.simpleMessage(
+      "The generation limit has been exhausted",
+    ),
     "thereWasAnError": MessageLookupByLibrary.simpleMessage(
       "There was an error",
     ),

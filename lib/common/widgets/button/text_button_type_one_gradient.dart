@@ -4,21 +4,23 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../util/constants/app_colors.dart';
 
 class TextButtonTypeOneGradient extends StatefulWidget {
-  const TextButtonTypeOneGradient({super.key, required this.text, required this.onPressed});
+  const TextButtonTypeOneGradient(
+      {super.key, required this.text, required this.onPressed});
 
   final String text;
   final Function onPressed;
 
   @override
-  State<TextButtonTypeOneGradient> createState() => _TextButtonTypeOneGradientState();
+  State<TextButtonTypeOneGradient> createState() =>
+      _TextButtonTypeOneGradientState();
 }
 
 class _TextButtonTypeOneGradientState extends State<TextButtonTypeOneGradient> {
-    bool isPressed = false;
-    bool isHovered = false;
+  bool isPressed = false;
+  bool isHovered = false;
+
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     return MouseRegion(
       cursor: SystemMouseCursors.click,
@@ -33,23 +35,36 @@ class _TextButtonTypeOneGradientState extends State<TextButtonTypeOneGradient> {
           margin: const EdgeInsets.all(5),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blue.withOpacity(0.2),
+                blurRadius: 5,
+                spreadRadius: 1,
+              )
+            ],
             gradient: isPressed
                 ? const LinearGradient(
-              colors: [Colors.white, Colors.white], // Градиент для isPressed
-            )
+                    colors: [
+                      Colors.white,
+                      Colors.white
+                    ], // Градиент для isPressed
+                  )
                 : isHovered
-                ? const LinearGradient(
-              colors: [Color(0xff073D9B), Color(0xff001F3F)], // Градиент для isHovered
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
-                : LinearGradient(
-              colors: [AppColors.textBtnTypeOneGradientStart, AppColors.textBtnTypeOneGradientEnd], // Градиент по умолчанию
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
+                    ? const LinearGradient(
+                        colors: [Color(0xff073D9B), Color(0xff001F3F)],
+                        // Градиент для isHovered
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : LinearGradient(
+                        colors: [
+                          AppColors.textBtnTypeOneGradientStart,
+                          AppColors.textBtnTypeOneGradientEnd
+                        ], // Градиент по умолчанию
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
             borderRadius: BorderRadius.circular(30), // Закругление углов
-        
           ),
           child: Center(
             child: Text(
@@ -67,6 +82,7 @@ class _TextButtonTypeOneGradientState extends State<TextButtonTypeOneGradient> {
           ),
         ),
       ),
-    );;
+    );
+    ;
   }
 }

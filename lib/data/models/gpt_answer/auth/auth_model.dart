@@ -6,10 +6,11 @@ part 'auth_model.g.dart';
 class AuthModel {
 
   final String email;
-  final String password;
+  final String? password;
+  final String? name;
   final bool isReceivedEmail;
 
-  AuthModel({required this.email, required this.password, this.isReceivedEmail = false});
+  AuthModel( {required this.email, this.name, this.password, this.isReceivedEmail = false});
 
 
   factory AuthModel.fromJson(Map<String, dynamic> json) =>

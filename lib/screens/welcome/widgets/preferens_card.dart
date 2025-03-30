@@ -17,10 +17,17 @@ class _PreferensCardState extends State<PreferensCard> {
       padding: EdgeInsets.all(screenWidth < 600 ? 30 : 50),
       constraints: const BoxConstraints(
         maxWidth: 1200,
+
       ),
       decoration: BoxDecoration(
         color: const Color(0xffCCE1F8),
         borderRadius: BorderRadius.circular(80),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+          )
+        ],
       ),
       child: widget.child,
     );

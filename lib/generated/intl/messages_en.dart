@@ -235,6 +235,11 @@ class MessageLookup extends MessageLookupByLibrary {
     "inputTextForSearch": MessageLookupByLibrary.simpleMessage(
       "Enter your request",
     ),
+    "inputYourEmail": MessageLookupByLibrary.simpleMessage("Input your e-mail"),
+    "inputYourName": MessageLookupByLibrary.simpleMessage("Input your name"),
+    "inputYourPassword": MessageLookupByLibrary.simpleMessage(
+      "Input your password",
+    ),
     "instantAnswersToAnyQuestion": MessageLookupByLibrary.simpleMessage(
       "Instant Answers to Any Question",
     ),
@@ -257,6 +262,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "login": MessageLookupByLibrary.simpleMessage("Log In"),
     "monthly": MessageLookupByLibrary.simpleMessage("Monthly"),
     "multimedia": MessageLookupByLibrary.simpleMessage("Multimedia"),
+    "name": MessageLookupByLibrary.simpleMessage("Name"),
     "neuralNetworkSpecialist": MessageLookupByLibrary.simpleMessage(
       "Neural Network Specialist",
     ),

@@ -76,6 +76,13 @@ class _QuestionCardState extends State<QuestionCard> {
           borderRadius: const BorderRadius.all(Radius.circular(50)),
           border: Border.all(color: AppColors.cardBorder, width: 2),
           color: AppColors.cardBackground,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 5,
+              spreadRadius: 1,
+            )
+          ],
         ),
         child: Wrap(
           alignment: WrapAlignment.spaceBetween,
@@ -103,7 +110,7 @@ class _QuestionCardState extends State<QuestionCard> {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      borderRadius: const BorderRadius.all(Radius.circular(25)),
                       border: Border.all(
                         color: const Color(0xff1C54B5),
                         width: 2,
@@ -112,15 +119,16 @@ class _QuestionCardState extends State<QuestionCard> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
+                    spacing: 20,
                     children: [
-                      Text(
-                        S.of(context).support,
-                        style: GoogleFonts.montserrat(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xff1C54B5)),
-                      ),
-                      const SizedBox(height: 20),
+                      // Text(
+                      //   S.of(context).support,
+                      //   style: GoogleFonts.montserrat(
+                      //       fontSize: 20,
+                      //       fontWeight: FontWeight.w600,
+                      //       color: const Color(0xff1C54B5)),
+                      // ),
+                      // const SizedBox(height: 20),
                       Container(
                         constraints: const BoxConstraints(maxWidth: 500),
                         height: 200,
@@ -135,7 +143,6 @@ class _QuestionCardState extends State<QuestionCard> {
                           validator: ValidationService().validateEmpty,
                         ),
                       ),
-                      const SizedBox(height: 20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -174,7 +181,7 @@ class _QuestionCardState extends State<QuestionCard> {
                   ),
                 ),
                 const SizedBox(
-                  height: 50,
+                  height: 30,
                 ),
                 Text(
                   S.of(context).socialNetworks,

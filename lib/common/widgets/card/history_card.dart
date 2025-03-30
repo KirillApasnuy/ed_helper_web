@@ -31,23 +31,12 @@ class _HistoryCardState extends State<HistoryCard> {
       ),
       padding: EdgeInsets.symmetric(horizontal: screenWidth < 500 ? 10 : 40, vertical: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        spacing: 10,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        spacing: 15,
         children: [
           Text("${widget.transaction.amount} руб", style: GoogleFonts.montserrat(fontSize: screenWidth < 900 ?14 : 16, fontWeight: FontWeight.w600),),
           Flexible(child: Text(widget.transaction.name, style: GoogleFonts.montserrat(fontSize: screenWidth < 900 ? 14 : 16, fontWeight: FontWeight.w400),)),
           Text("${widget.transaction.date.toString().substring(0, 10)}", style: GoogleFonts.montserrat(fontSize: screenWidth < 900 ? 14 : 16, fontWeight: FontWeight.w500),),
-          Transform.scale(
-            scale: screenWidth < 900 ? 0.7 : 1,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text("**33", style: GoogleFonts.montserrat(fontSize: screenWidth < 900 ? 18: 20, fontWeight: FontWeight.w600),),
-                SvgPicture.asset("assets/svg/logos_mastercard.svg")
-              ],
-            ),
-          ),
         ],
       ),
     );

@@ -38,7 +38,7 @@ class _RegistrationDialogState extends State<RegistrationDialog>
     with SingleTickerProviderStateMixin {
   final _key = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   AuthRepository authRepository = AuthRepository();
 
   final String clientId = dotenv.env['oauth_google_client_id']!;
@@ -107,7 +107,6 @@ class _RegistrationDialogState extends State<RegistrationDialog>
     if (!_key.currentState!.validate()) return;
 
     if (!isAgreement) {
-      print(isAgreement); // Логирование
       setState(() {
         isValidAgreement = false;
       });
@@ -119,7 +118,7 @@ class _RegistrationDialogState extends State<RegistrationDialog>
     });
 
     AuthModel authModel = AuthModel(
-        email: emailController.text, password: passwordController.text,
+        email: emailController.text, name: nameController.text,
     isReceivedEmail: isGetNews,);
     Response response = await authRepository.signUp(authModel);
 
@@ -282,19 +281,19 @@ class _RegistrationDialogState extends State<RegistrationDialog>
             mainAxisSize: MainAxisSize.min,
             children: [
               FormFieldTypeOne(
+                controller: nameController,
+                labelText: S.of(context).name,
+                hintText: S.of(context).inputYourName,
+                validator: ValidationService().validateEmpty,
+              ),
+              const SizedBox(height: 20),
+              FormFieldTypeOne(
                 controller: emailController,
                 labelText: S
                     .of(context)
                     .email,
+                hintText: S.of(context).inputYourEmail,
                 validator: ValidationService().validateEmail,
-              ),
-              const SizedBox(height: 20),
-              FormFieldTypeOne(
-                controller: passwordController,
-                labelText: S
-                    .of(context)
-                    .password,
-                validator: ValidationService().validatePassword,
               ),
               const SizedBox(height: 10),
               Transform.translate(

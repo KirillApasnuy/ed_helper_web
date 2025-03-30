@@ -1,12 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:ed_helper_web/common/widgets/app_widgets/language_selector.dart';
-import 'package:ed_helper_web/common/widgets/button/text_button_type_one_gradient.dart';
 import 'package:ed_helper_web/common/widgets/pictures/svg_icons.dart';
 import 'package:ed_helper_web/screens/home/widgets/home_side_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../common/widgets/button/text_button_type_two.dart';
 import '../../../common/widgets/button/text_button_type_two_gradient.dart';
 import '../../../data/models/chat_message/chat_model.dart';
 import '../../../generated/l10n.dart';
@@ -48,10 +46,15 @@ class _SideBarState extends State<SideBar> {
           physics: const NeverScrollableScrollPhysics(),
           child: Column(
             children: [
+              const SizedBox(
+                height: 10,
+              ),
               SizedBox(
                   width: 250,
-                  height: 60,
-                  child: TextButtonTypeOneGradient(
+                  height: 50,
+                  child: TextButtonTypeTwoGradient(
+                      backgroundColor: const Color(0xff1C54B5),
+                      textColor: Colors.white,
                       text: S.of(context).home,
                       onPressed: () {
                         AutoRouter.of(context).push(HomeRoute());
@@ -60,8 +63,8 @@ class _SideBarState extends State<SideBar> {
                       })),
               SizedBox(
                   width: 250,
-                  height: 60,
-                  child: TextButtonTypeTwo(
+                  height: 50,
+                  child: TextButtonTypeTwoGradient(
                       text: S.of(context).chat,
                       onPressed: () {
                         AutoRouter.of(context).push(HomeRoute());

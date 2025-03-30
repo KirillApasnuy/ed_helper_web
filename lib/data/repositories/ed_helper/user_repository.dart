@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:ed_helper_web/data/models/gpt_answer/auth/auth_model.dart';
 import 'package:ed_helper_web/data/models/user/user_model.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +28,7 @@ class UserRepository {
     return UserModel.fromJson(response.data);
   }
 
-  Future<Response> updateUser(UserModel user) async {
+  Future<Response> updateUser(AuthModel user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String authToken = prefs.getString("token") ?? "";
     if (authToken.isEmpty) throw Exception("No token");

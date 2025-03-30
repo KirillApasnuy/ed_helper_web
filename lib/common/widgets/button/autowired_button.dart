@@ -23,12 +23,13 @@ class _AutowiredButtonState extends State<AutowiredButton> {
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.autowiredButtonBackground,
             overlayColor: AppColors.cardBorder,
+            shadowColor: Colors.blue.withOpacity(0.4)
           ),
           child: Text(
             widget.title,
             textAlign: TextAlign.center,
             style:
-                GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black),
+                GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
 
           )),
     );

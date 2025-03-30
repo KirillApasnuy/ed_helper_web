@@ -159,50 +159,56 @@ class _ToggleContainerState extends State<ToggleContainer> {
                             return Container(
                                 constraints:
                                     const BoxConstraints(maxWidth: 600),
-                                child: SubscribeCard(
-                                  isPremium: subscription.premium,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        isEnglish
-                                            ? subscription.enTitle
-                                            : subscription.ruTitle,
-                                        style: GoogleFonts.montserrat(
-                                          fontSize: 25,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Column(
+                                child: Column(
+                                  children: [
+                                    SubscribeCard(
+                                      isPremium: subscription.premium,
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        spacing: 15,
-                                        children: (isEnglish
-                                                ? subscription.enBenefits
-                                                : subscription.ruBenefits)
-                                            .map((benefit) {
-                                          return BenefitTile(title: benefit);
-                                        }).toList(),
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            isEnglish
+                                                ? subscription.enTitle
+                                                : subscription.ruTitle,
+                                            style: GoogleFonts.montserrat(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            spacing: 15,
+                                            children: (isEnglish
+                                                    ? subscription.enBenefits
+                                                    : subscription.ruBenefits)
+                                                .map((benefit) {
+                                              return BenefitTile(title: benefit);
+                                            }).toList(),
+                                          ),
+
+                                        ],
                                       ),
-                                      const SizedBox(height: 10),
-                                      TextButtonTypeOne(
+                                    ),
+                                    const SizedBox(height: 10),
+                                    TextButtonTypeOne(
                                         isLoading: isLoading,
-                                          text:
-                                              "${widget.isYearBilling ? isEnglish ? (subscription.amountPerMonthInYear / 100).toString() : subscription.amountPerMonthInYear.toString() : isEnglish ? (subscription.amountPerMonth / 100).toString() : subscription.amountPerMonth.toString()} ${isEnglish ? "\$" : "₽"}/${widget.isYearBilling ?
-                                                  isEnglish ? "year" :"год"
-                                                 : isEnglish ? "month" :"мес"}",
-                                          onPressed: () {
-                                            _subscribe(subscription);
-                                          })
-                                    ],
-                                  ),
+                                        isPremium: subscription.premium,
+                                        text:
+                                        "${widget.isYearBilling ? isEnglish ? (subscription.amountPerMonthInYear / 100).toString() : subscription.amountPerMonthInYear.toString() : isEnglish ? (subscription.amountPerMonth / 100).toString() : subscription.amountPerMonth.toString()} ${isEnglish ? "\$" : "₽"}/${widget.isYearBilling ?
+                                        isEnglish ? "year" :"год"
+                                            : isEnglish ? "month" :"мес"}",
+                                        onPressed: () {
+                                          _subscribe(subscription);
+                                        })
+                                  ],
                                 ));
                           }).toList()
                         : [Text("empty")],

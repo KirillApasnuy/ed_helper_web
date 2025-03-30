@@ -77,7 +77,7 @@ class _FormFieldTypeOneState extends State<FormFieldTypeOne> {
                 hintStyle: GoogleFonts.montserrat(
                   fontWeight: FontWeight.w400,
                   fontSize: 18,
-                  color: const Color(0xff252525),
+                  color: Colors.black45,
                 ),
                 isDense: false,
                 focusedBorder: OutlineInputBorder(

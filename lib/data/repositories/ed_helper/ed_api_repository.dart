@@ -20,7 +20,7 @@ class EdApiRepository {
     if (authToken.isEmpty) throw Exception("No token");
     Map<String, dynamic> requestBody = {
       "text": message.text,
-      "model": "gpt-4-turbo",
+      "model": (message.imageUrl != null || message.attachFile != null) ? "gpt-4o" :"gpt-4-turbo",
       "chatId": chatId,
       "assistantId": 1,
       "imageUrl": message.imageUrl,

@@ -99,7 +99,8 @@ class _ViewFileState extends State<ViewFile> with SingleTickerProviderStateMixin
     return Listener(
       onPointerSignal: _handleMouseWheel, // Обработка колеса мыши
       child: GestureDetector(
-        onDoubleTap: _resetScale, // Сброс масштаба по двойному нажатию
+        onDoubleTap: _resetScale,
+        onTap: toggleAnimation,// Сброс масштаба по двойному нажатию
         child: InteractiveViewer(
           transformationController: _transformationController,
           minScale: 0.5,
@@ -163,7 +164,7 @@ class _ViewFileState extends State<ViewFile> with SingleTickerProviderStateMixin
                   child: IconButton(
                     color: const Color(0xff77ADED),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff77ADED),
+                      backgroundColor: Colors.transparent,
                     ),
                     icon: SizedBox(
                       width: screenWidth < 600 ? 35 : 100,
@@ -171,7 +172,7 @@ class _ViewFileState extends State<ViewFile> with SingleTickerProviderStateMixin
                       child: Icon(
                         _isPlaying ? Iconsax.pause_circle5 : Iconsax.play_cricle5,
                         size: screenWidth < 600 ? 30 : 80,
-                        color: Colors.white,
+                        color: Colors.blue,
                       ),
                     ),
                     onPressed: toggleAnimation,

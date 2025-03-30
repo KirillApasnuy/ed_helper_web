@@ -11,6 +11,7 @@ class TextButtonTypeTwo extends StatefulWidget {
   final MainAxisSize mainAxisSize;
   Color? borderColor = const Color(0xff1C54B5);
   Color? textColor = const Color(0xff000000);
+
   final Widget? suffixIcon;
 
   @override
@@ -31,43 +32,59 @@ class _TextButtonTypeTwoState extends State<TextButtonTypeTwo> {
           onTapDown: (_) => setState(() => isPressed = true),
           onTapUp: (_) => setState(() => isPressed = false),
           onTapCancel: () => setState(() => isPressed = false),
-          child: TextButton(
-              onPressed: () => widget.onPressed(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    !isPressed ? isHovered? AppColors.cardBackground : Colors.white : const Color(0xff1C54B5),
-                foregroundColor: AppColors.cardBackground,
+          child: Container(
+            margin: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
 
-                surfaceTintColor: Colors.white,
-                overlayColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  side: BorderSide(color: widget.borderColor ?? const Color(0xff1C54B5), width: 2),
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.withOpacity(0.2),
+                  blurRadius: 5,
+                  spreadRadius: 1,
+                )
+              ],
+            ),
+            child: TextButton(
+                onPressed: () => widget.onPressed(),
+                style: ElevatedButton.styleFrom(
+                  shadowColor: Colors.black.withOpacity(0.1),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+                  backgroundColor:
+                      !isPressed ? isHovered? AppColors.cardBackground : Colors.white : const Color(0xff1C54B5),
+                  foregroundColor: AppColors.cardBackground,
+
+                  surfaceTintColor: Colors.white,
+                  overlayColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    side: BorderSide(color: widget.borderColor ?? const Color(0xff1C54B5), width: 2),
+                  ),
                 ),
-              ),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
-                child: Row(
-                  mainAxisAlignment: widget.suffixIcon != null ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
-                  mainAxisSize: widget.mainAxisSize,
-                  children: [
-                    Text(
-                      widget.text,
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.montserrat(
-                        color:
-                            !isPressed ? widget.textColor ?? widget.borderColor ?? const Color(0xff1C54B5) : AppColors.primary,
-                        fontSize: screenWidth < 900 ? 16 : 18.5,
-                        fontWeight: FontWeight.w400,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+                  child: Row(
+                    mainAxisAlignment: widget.suffixIcon != null ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+                    mainAxisSize: widget.mainAxisSize,
+                    children: [
+                      Text(
+                        widget.text,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.montserrat(
+                          color:
+                              !isPressed ? widget.textColor ?? widget.borderColor ?? const Color(0xff1C54B5) : AppColors.primary,
+                          fontSize: screenWidth < 900 ? 16 : 18.5,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
-                    ),
-                    if (widget.suffixIcon != null) const SizedBox(width: 10),
-                    if (widget.suffixIcon != null) widget.suffixIcon!,
-                  ],
-                ),
-              ))),
+                      if (widget.suffixIcon != null) const SizedBox(width: 10),
+                      if (widget.suffixIcon != null) widget.suffixIcon!,
+                    ],
+                  ),
+                )),
+          )),
     );
   }
 }

@@ -1463,6 +1463,41 @@ class S {
       args: [],
     );
   }
+
+  /// `Name`
+  String get name {
+    return Intl.message('Name', name: 'name', desc: '', args: []);
+  }
+
+  /// `Input your name`
+  String get inputYourName {
+    return Intl.message(
+      'Input your name',
+      name: 'inputYourName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Input your e-mail`
+  String get inputYourEmail {
+    return Intl.message(
+      'Input your e-mail',
+      name: 'inputYourEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Input your password`
+  String get inputYourPassword {
+    return Intl.message(
+      'Input your password',
+      name: 'inputYourPassword',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

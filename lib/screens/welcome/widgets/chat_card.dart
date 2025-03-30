@@ -17,17 +17,9 @@ class _ChatCardState extends State<ChatCard> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(30),
       child: Container(
-        decoration: const BoxDecoration(
-        color: Color(0xffF1F7FC),
-            shape: BoxShape.rectangle,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x260F4CB4),
-                spreadRadius: 3,
-                blurRadius: 30,
+        decoration: BoxDecoration(
+        color: const Color(0xffF1F7FC),
 
-              )
-            ]
         ),
         child: Stack(
           children: [

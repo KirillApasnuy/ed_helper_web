@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:ed_helper_web/data/repositories/chat_gpt_repositories.dart';
+import 'package:ed_helper_web/data/services/chat_gpt_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_audio_waveforms/flutter_audio_waveforms.dart';
@@ -9,6 +11,9 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/models/chat_message/chat_message.dart';
@@ -41,7 +46,7 @@ class _ChatBubbleState extends State<ChatBubble> {
   Duration _duration = const Duration(seconds: 1);
   Duration _position = const Duration(seconds: 1);
   bool _isPlaying = false;
-  bool _isActiveListening = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -95,7 +100,9 @@ class _ChatBubbleState extends State<ChatBubble> {
     } else if (widget.message.audioUrl != null) {
       _audioPlayer.play(UrlSource(
           "$API_URL/v1/media/${widget.userId}/${widget.message.audioUrl}"));
-    } else {
+    }
+
+    else {
       print("No audio source available");
       return;
     }
@@ -108,7 +115,7 @@ class _ChatBubbleState extends State<ChatBubble> {
 
   void _playAudio(Uint8List bytes) async {
     try {
-      await _audioPlayer.play(BytesSource(bytes));
+      await _audioPlayer.play(BytesSource(widget.message.audioFile!.bytes));
       _audioPlayer.onPlayerComplete.listen((event) {
         setState(() {
           isSound = false;
@@ -120,18 +127,28 @@ class _ChatBubbleState extends State<ChatBubble> {
   }
 
   Future<void> ttsMessage() async {
+    late File ttsFile;
+    final pathDocumentDirectory = await getApplicationDocumentsDirectory();
+    final voiceDir =
+        Directory("${pathDocumentDirectory.path}/ed_helper/voice_message");
+
+    // Создаем директорию, если её нет
+    if (!voiceDir.existsSync()) {
+      voiceDir.createSync(recursive: true);
+    }
+
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? voice = prefs.getString("voice");
+
     ChatGptRepositories.synthesizeSpeech(
-            text: widget.message.text, voice: "alloy")
+            text: widget.message.text, voice: voice ?? "alloy")
         .then((res) {
-          setState(() {
-            _isActiveListening = true;
-          });
-          _playAudio(res.data);
-          setState(() {
-            _isActiveListening = false;
-          });
-        })
-        .catchError((error) => print(error));
+      ChatGptService.saveSpeechToFile(res, widget.message.audioFile!.bytes)
+          .then((file) async {
+        ttsFile = file;
+        _playAudio(await file.readAsBytes());
+      });
+    });
   }
 
   Widget buildTextWidget() {
@@ -244,11 +261,7 @@ class _ChatBubbleState extends State<ChatBubble> {
     double screenWidth = MediaQuery.of(context).size.width;
     final safeElapsed = _position <= _duration ? _position : _duration;
     return FractionallySizedBox(
-      widthFactor: widget.message.user
-          ? 0.72
-          : screenWidth < 600
-              ? 0.95
-              : 0.75,
+      widthFactor: widget.message.user ? 0.72 : screenWidth < 600 ? 0.95 : 0.75,
       child: MouseRegion(
         onEnter: (_) {
           setState(() {
@@ -266,8 +279,8 @@ class _ChatBubbleState extends State<ChatBubble> {
               : Alignment.centerLeft,
           child: Transform.translate(
             offset: Offset(
-                widget.message.user
-                    ? 60
+                widget.message.user ?
+                     60
                     : screenWidth < 600
                         ? -80
                         : -50,
@@ -288,24 +301,19 @@ class _ChatBubbleState extends State<ChatBubble> {
                     constraints: BoxConstraints(
                       minHeight: 70,
                       minWidth: 70,
-                      maxWidth: widget.message.audioUrl != null
-                          ? screenWidth * 0.35
-                          : screenWidth * 0.85,
+                      maxWidth: widget.message.audioUrl != null ? screenWidth * 0.35 : screenWidth * 0.85,
                     ),
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              offset: const Offset(0, 2),
-                              blurRadius: 7)
-                        ],
+                        boxShadow: [BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          offset: const Offset(0, 2),
+                          blurRadius: 7
+                        )],
                         borderRadius: (widget.message.user)
-                            ? const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(5))
+                            ? const BorderRadius.all(
+                                Radius.circular(30),
+                              )
                             : const BorderRadius.only(
                                 topLeft: Radius.circular(30),
                                 topRight: Radius.circular(30),
@@ -328,8 +336,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                               if (widget.message.audioFile != null ||
                                   widget.message.audioUrl != null)
                                 Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children: [
                                     IconButton(
                                       icon: Container(
@@ -351,23 +358,19 @@ class _ChatBubbleState extends State<ChatBubble> {
                                         _togglePlay();
                                       },
                                     ),
-                                    if (screenWidth >= 650)
-                                      SquigglyWaveform(
-                                        samples: _samples
-                                            .getRange(
-                                                0, screenWidth > 900 ? 25 : 30)
-                                            .toList(),
-                                        height: 40,
-                                        width: screenWidth * 0.3 - 80,
-                                        activeColor: Colors.blue,
-                                        inactiveColor: Colors.grey,
-                                        maxDuration: _duration == Duration.zero
-                                            ? const Duration(seconds: 1)
-                                            : _duration,
-                                        elapsedDuration: safeElapsed,
-                                        invert: true,
-                                        showActiveWaveform: true,
-                                      ),
+                                    if (screenWidth >= 650)SquigglyWaveform(
+                                      samples: _samples.getRange(0, screenWidth > 900 ? 25 : 30).toList(),
+                                      height: 40,
+                                      width: screenWidth * 0.3 - 80,
+                                      activeColor: Colors.blue,
+                                      inactiveColor: Colors.grey,
+                                      maxDuration: _duration == Duration.zero
+                                          ? const Duration(seconds: 1)
+                                          : _duration,
+                                      elapsedDuration: safeElapsed,
+                                      invert: true,
+                                      showActiveWaveform: true,
+                                    ),
                                   ],
                                 ),
                               if (widget.message.text.isNotEmpty &&
@@ -506,12 +509,11 @@ class _ChatBubbleState extends State<ChatBubble> {
                   ),
                 ),
                 widget.message.user
-                    ? (screenWidth > 600)
                     ? Transform.translate(
                         offset: const Offset(0, -43),
                         child:
                             SvgPicture.asset("assets/svg/client_message.svg"),
-                      ) : const SizedBox()
+                      )
                     : (screenWidth > 600)
                         ? Transform.translate(
                             offset: const Offset(10, -51),
@@ -524,16 +526,13 @@ class _ChatBubbleState extends State<ChatBubble> {
                                       // margin: const EdgeInsets.only(right: 10.0),
                                       padding: const EdgeInsets.all(8.0),
                                       decoration: const BoxDecoration(
-                                          color: Colors.white,
+                                          color : Colors.white,
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(30))),
                                       child: SvgPicture.asset(
                                           "assets/logo/logo.svg")),
                                 ),
-                                SvgPicture.asset(
-                                  "assets/svg/bot_message.svg",
-                                  semanticsLabel: "Bot meesage",
-                                ),
+                                SvgPicture.asset("assets/svg/bot_message.svg", semanticsLabel: "Bot meesage",),
                               ],
                             ),
                           )
@@ -549,8 +548,8 @@ class _ChatBubbleState extends State<ChatBubble> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
-                            onPressed: ttsMessage,
-                            icon: _isActiveListening ? SvgPicture.asset("assets/svg/active_listening.svg") : SvgPicture.asset("assets/svg/listen.svg"),
+                            onPressed: () => ttsMessage(),
+                            icon: SvgPicture.asset("assets/svg/listen.svg"),
                           ),
                           IconButton(
                             onPressed: () {

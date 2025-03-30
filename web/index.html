@@ -19,65 +19,8 @@
   <title>Ed Helper</title>
   <link rel="manifest" href="./manifest.json">
   <script src="./flutter.js" defer></script>
-
-  <!-- Стили для Splash Screen -->
-  <style>
-    /* Основные стили для сплэш-скрина */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      background-color: #000000; /* Тёмный фон */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    /* Контейнер для анимации */
-    .splash-container {
-      text-align: center;
-    }
-
-    /* Стили для анимированного .gif */
-    .splash-gif {
-      width: 150px; /* Размер анимации */
-      height: 150px;
-    }
-
-    /* Дополнительные стили, если нужно */
-    .splash-text {
-      margin-top: 20px;
-      font-size: 18px;
-      color: #FFFFFF; /* Белый цвет текста */
-      font-family: Arial, sans-serif;
-    }
-  </style>
-
 </head>
 <body>
-<!-- Splash Screen -->
-<div class="splash-container">
-  <video class="splash-gif" autoplay loop muted playsinline>
-    <source src="./load.mp4" type="video/mp4">
-    Ваш браузер не поддерживает видео.
-  </video>
-  <div class="splash-text">Загрузка...</div> <!-- Текст под анимацией -->
-</div>
-
-<!-- Скрипт для перехода на основное приложение -->
-<script>
-  // Задержка перед переходом на основное приложение
-  setTimeout(function() {
-    // Скрываем сплэш-скрин
-    document.querySelector('.splash-container').style.display = 'none';
-    // Загружаем Flutter-приложение
-    window.addEventListener('load', function() {
-      console.log("Flutter app loaded!");
-    });
-  }, 3000); // 3 секунды задержки
-</script>
-
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

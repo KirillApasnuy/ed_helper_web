@@ -15,7 +15,7 @@ class AppColors {
 
   static Color textBtnTypeOneGradientStart = const Color(0xff518BCF);
   static Color textBtnTypeOneGradientEnd = const Color(0xff1C54B5);
-  static Color autowiredButtonBackground = const Color(0xff77ADED);
+  static Color autowiredButtonBackground = const Color(0xffEDEDED);
 
   static Color mainLogoFill = const Color(0xffF1F7FC);
 }

@@ -163,9 +163,5 @@
   "theGenerationLimitHasBeenExhausted": "Лимит генерации исчерпан",
   "activeUntil": "Активен до:",
   "subscriptionSuspendedToExtendItYouNeedTo": "Подписка приостановлена. Чтобы продлить ее, вам необходимо",
-  "paySubscription": "Оплатить подписку",
-  "name": "Name",
-  "inputYourName": "Input your name",
-  "inputYourEmail": "Input your e-mail",
-  "inputYourPassword": "Input your password"
+  "paySubscription": "Оплатить подписку"
 }

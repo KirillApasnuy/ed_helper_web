@@ -28,23 +28,13 @@ class _TextButtonTypeOneState extends State<TextButtonTypeOne> {
         onTapUp: (_) => setState(() => isPressed = false),
         onTapCancel: () => setState(() => isPressed = false),
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-          margin: const EdgeInsets.symmetric(horizontal: 5,),
           decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue.withOpacity(0.2),
-                blurRadius: 5,
-                spreadRadius: 1,
-              )
-            ],
             gradient: LinearGradient(
               colors: isPressed
                   ? [Colors.white, Colors.white] // Градиент при нажатии
                   : isHovered
                   ? [const Color(0xff073D9B), const Color(0xff1C54B5)] // Градиент при наведении
-                  : widget.isPremium ? [const Color(0xff00BFCF),const Color(0xff1C54B5),] :
-              [const Color(0xff1C54B5), const Color(0xff1C54B5)], // Стандартный градиент
+                  : widget.isPremium ? [const Color(0xff00BFCF),const Color(0xff1C54B5),] :[const Color(0xff1C54B5), const Color(0xff1C54B5)], // Стандартный градиент
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
             ),
@@ -58,7 +48,7 @@ class _TextButtonTypeOneState extends State<TextButtonTypeOne> {
             onTap: () => widget.onPressed(),
             borderRadius: BorderRadius.circular(30),
             child: Container(
-              // padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: widget.mainAxisSize ?? MainAxisSize.max,

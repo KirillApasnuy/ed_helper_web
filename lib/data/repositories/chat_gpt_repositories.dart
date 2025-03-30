@@ -58,7 +58,7 @@ class ChatGptRepositories {
         "Content-Type": "application/json",
         "Authorization": "Bearer $apiKey",
       }, responseType: ResponseType.bytes),
-      data: {"model": "gpt-4o-mini-tts", "input": text, "voice": voice},
+      data: {"model": "tts-1", "input": text, "voice": voice},
     );
   }
 }

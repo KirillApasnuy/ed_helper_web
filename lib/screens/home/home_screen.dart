@@ -44,18 +44,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final recorder = WebAudioRecorder();
-  final edApiRepository = EdApiRepository();
-  final chatScrollController = ScrollController();
+  final EdApiRepository edApiRepository = EdApiRepository();
+  ScrollController chatScrollController = ScrollController();
   final _mainScrollController = ScrollController();
   final mediaRepository = MediaRepository();
   final loadingMessage = ChatMessage(
       timestamp: DateTime.now(), text: "", user: false, isLoading: true);
-  final chatController = TextEditingController();
+  TextEditingController chatController = TextEditingController();
   ChatModel _chatHistory =
       ChatModel(createdAt: DateTime.now(), id: 0, title: "", messages: []);
+  bool isFileAttach = false;
   FileModel? attachFile;
   FileModel? audioFile;
-  bool isFileAttach = false;
   bool isMenuVisible = false;
   bool isRightMenuVisible = false;
   bool isVoiceMessage = false;
@@ -187,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
       _chatHistory.messages.add(loadingMessage);
       setChatTitle();
       setState(() {
-        isFileAttach = false;
+        _isFileAttach = false;
         chatController.clear();
       });
       _scrollToBottom();
@@ -586,16 +586,7 @@ class _HomeScreenState extends State<HomeScreen> {
               alignment: Alignment.topCenter,
               child: Container(
                 height: 70,
-                decoration: BoxDecoration(
-                  color: const Color(0xffF1F7FC),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
-                      blurRadius: 5,
-                      spreadRadius: 1,
-                    )
-                  ]
-                ),
+                color: const Color(0xffF1F7FC),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -617,14 +608,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                       path: "assets/svg/menu.svg",
                                       size: 50))),
                           if (!(screenWidth < 700 && isMenuVisible))
-                            SizedBox(
-                              height: 50,
-                              child: TextButtonTypeTwoGradient(
-                                  text: S.of(context).home,
-                                  onPressed: () {
-                                    AutoRouter.of(context).push(const WelcomeRoute());
-                                  }),
-                            ),
+                            TextButtonTypeTwoGradient(
+                                text: S.of(context).home,
+                                onPressed: () {
+                                  AutoRouter.of(context).push(const WelcomeRoute());
+                                }),
                         ],
                       ) :  (!isMenuVisible)  ? Container(
                         margin: const EdgeInsets.only(left: 20),

@@ -163,9 +163,5 @@
   "theGenerationLimitHasBeenExhausted": "The generation limit has been exhausted",
   "activeUntil": "Active until:",
   "subscriptionSuspendedToExtendItYouNeedTo": "Subscription suspended. To extend it you need to",
-  "paySubscription": "Pay subscription",
-  "name": "Name",
-  "inputYourName": "Input your name",
-  "inputYourEmail": "Input your e-mail",
-  "inputYourPassword": "Input your password"
+  "paySubscription": "Pay subscription"
 }

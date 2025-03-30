@@ -3,15 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TextButtonTypeTwoGradient extends StatefulWidget {
-  TextButtonTypeTwoGradient({
-    super.key,
-    required this.text,
-    required this.onPressed,
-    this.borderColor,
-    this.suffixIcon,
-    this.textColor,
-    this.backgroundColor = Colors.white,
-  });
+  TextButtonTypeTwoGradient(
+      {super.key,
+      required this.text,
+      required this.onPressed,
+      this.borderColor,
+      this.suffixIcon,
+      this.textColor,
+      this.backgroundColor = Colors.white,});
 
   final String text;
   final Function onPressed;
@@ -34,15 +33,6 @@ class _TextButtonTypeTwoGradientState extends State<TextButtonTypeTwoGradient> {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       margin: const EdgeInsets.all(5),
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(30),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue.withOpacity(0.2),
-                blurRadius: 5,
-                spreadRadius: 1,
-              )
-            ],),
       child: MouseRegion(
         onEnter: (_) => setState(() => isHovered = true),
         onExit: (_) => setState(() => isHovered = false),

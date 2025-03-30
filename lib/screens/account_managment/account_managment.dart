@@ -3,10 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:ed_helper_web/common/widgets/button/text_button_type_two.dart';
 import 'package:ed_helper_web/common/widgets/dialog/done_dialog.dart';
 import 'package:ed_helper_web/common/widgets/form_fields/form_field_type_one.dart';
-import 'package:ed_helper_web/data/models/gpt_answer/auth/auth_model.dart';
 import 'package:ed_helper_web/data/models/user/user_model.dart';
 import 'package:ed_helper_web/data/repositories/ed_helper/user_repository.dart';
-import 'package:ed_helper_web/util/device/validation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +20,6 @@ import '../../util/constants/app_colors.dart';
 import '../../util/routes/router.dart';
 import '../welcome/widgets/side_bar.dart';
 
-final _formKey = GlobalKey<FormState>();
 @RoutePage()
 class AccountManagementScreen extends StatefulWidget {
   AccountManagementScreen({super.key, this.authUser});
@@ -42,12 +39,8 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
   bool isMenuVisible = false;
 
   void updateUser() async {
-    if (_formKey.currentState!.validate()) return;
-    AuthModel newUser = AuthModel(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-    Response response = await _userRepository.updateUser(newUser);
+    widget.authUser!.email = _emailController.text;
+    Response response = await _userRepository.updateUser(widget.authUser!);
     if (response.statusCode == 200) {
       showDialog(
           context: context,
@@ -96,6 +89,7 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
     _initializeUser();
     if (widget.authUser != null) {
       _emailController.text = widget.authUser!.email;
+      _passwordController.text = "********";
     }
   }
 
@@ -119,14 +113,16 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
         height: screenHeight,
         child: Stack(
           children: [
-            Positioned(
-              left: -200,
-              top: -50,
-              child: Image.asset(
-                "assets/logo_back_transparet.png",
-                fit: BoxFit.fitHeight,
-                width: 700,
-                height: 700,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Transform.translate(
+                offset: const Offset(-290, 0),
+                child: Image.asset(
+                  "assets/logo_back_transparet.png",
+                  fit: BoxFit.cover,
+                  width: 800,
+                  height: 800,
+                ),
               ),
             ),
             if (widget.authUser != null)
@@ -135,110 +131,104 @@ class _AccountManagementScreenState extends State<AccountManagementScreen> {
                   child: Container(
                     constraints: const BoxConstraints(maxWidth: 800),
                     margin: const EdgeInsets.all(10),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        spacing: 8,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          const SizedBox(
-                            height: 100,
-                          ),
-                          Text(S.of(context).accountManagement,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.montserrat(
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black)),
-                          const SizedBox(height: 20),
-                          Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runSpacing: 8,
-                            spacing: 50,
-                            children: [
-                              FormFieldTypeOne(
-                                controller: _emailController,
-                                labelText: S.of(context).email,
-                                validator: ValidationService().validateEmail,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  height: 60,
-                                  width: 150,
-                                  constraints: const BoxConstraints(maxWidth: 450),
-                                  child: TextButtonTypeTwoGradient(
-                                      backgroundColor: const Color(0xffCCE1F8),
-                                      // textColor: ,
-                                      text: S.of(context).edit,
-                                      onPressed: updateUser),
+                    child: Column(
+                      spacing: 8,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 100,
+                        ),
+                        Text(S.of(context).accountManagement,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.montserrat(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black)),
+                        const SizedBox(height: 20),
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          runSpacing: 8,
+                          spacing: 50,
+                          children: [
+                            Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 450),
+                                child: FormFieldTypeOne(
+                                  controller: _emailController,
+                                  labelText: S.of(context).email,
+                                )),
+                            Container(
+                              height: 50,
+                              constraints: const BoxConstraints(maxWidth: 450),
+                              child: TextButtonTypeTwo(
+                                  mainAxisSize: screenWidth > 600
+                                      ? MainAxisSize.min
+                                      : MainAxisSize.max,
+                                  text: S.of(context).edit,
+                                  onPressed: updateUser),
+                            )
+                          ],
+                        ),
+                        Wrap(
+                          alignment: WrapAlignment.spaceBetween,
+                          crossAxisAlignment: WrapCrossAlignment.end,
+                          runSpacing: 8,
+                          spacing: 50,
+                          children: [
+                            Container(
+                                constraints:
+                                    const BoxConstraints(maxWidth: 450),
+                                child: FormFieldTypeOne(
+                                  controller: _passwordController,
+                                  labelText: S.of(context).password,
+                                )),
+                            Container(
+                              height: 50,
+                              constraints: const BoxConstraints(maxWidth: 450),
+                              child: TextButtonTypeTwo(
+                                  mainAxisSize: screenWidth > 600
+                                      ? MainAxisSize.min
+                                      : MainAxisSize.max,
+                                  text: S.of(context).edit,
+                                  onPressed: updateUser),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          runAlignment: WrapAlignment.start,
+                          alignment: WrapAlignment.start,
+                          runSpacing: 8,
+                          spacing: 50,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  S.of(context).deleteAccountAndAllData,
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: screenWidth < 900 ? 20 : 25),
                                 ),
-                              )
-                            ],
-                          ),
-                          Wrap(
-                            alignment: WrapAlignment.spaceBetween,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            runSpacing: 8,
-                            spacing: 50,
-                            children: [
-                              FormFieldTypeOne(
-                                controller: _passwordController,
-                                labelText: S.of(context).password,
-                                hintText: "********",
-                                validator: ValidationService().validatePassword,
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  height: 60,
-                                  width: 150,
-                                  constraints: const BoxConstraints(maxWidth: 450),
-                                  child: TextButtonTypeTwoGradient(
-                                      backgroundColor: const Color(0xffCCE1F8),
-                                      // textColor: ,
-                                      text: S.of(context).edit,
-                                      onPressed: updateUser),
+                                Text(
+                                  S.of(context).thisActionIsIrreversible,
+                                  style: GoogleFonts.montserrat(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: screenWidth < 900 ? 17 : 20),
                                 ),
-                              )
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Wrap(
-                            runAlignment: WrapAlignment.start,
-                            alignment: WrapAlignment.start,
-                            runSpacing: 8,
-                            spacing: 50,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    S.of(context).deleteAccountAndAllData,
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: screenWidth < 900 ? 20 : 25),
-                                  ),
-                                  Text(
-                                    S.of(context).thisActionIsIrreversible,
-                                    style: GoogleFonts.montserrat(
-                                        fontWeight: FontWeight.w400,
-                                        fontSize: screenWidth < 900 ? 17 : 20),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                  width: screenWidth < 900 ? 200 : 250,
-                                  height: 60,
-                                  child: TextButtonTypeTwo(
-                                      text: S.of(context).deleteAccount,
-                                      onPressed: deleteUser)),
-                            ],
-                          ),
-                        ],
-                      ),
+                              ],
+                            ),
+                            SizedBox(
+                                width: screenWidth < 900 ? 200 : 250,
+                                height: 50,
+                                child: TextButtonTypeTwo(
+                                    text: S.of(context).deleteAccount,
+                                    onPressed: deleteUser)),
+                          ],
+                        ),
+                      ],
                     ),
                   )),
             Align(

@@ -106,15 +106,6 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                       ),
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                      decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.blue.withOpacity(0.2),
-                              blurRadius: 20,
-                              spreadRadius: 10,
-                            )
-                          ]
-                      ),
                       child: ChatCard(
                         maxWidth: 600,
                         isPadding: false,

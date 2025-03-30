@@ -48,12 +48,14 @@ class _LoginDialogState extends State<LoginDialog> {
     AuthModel authModel = AuthModel(
         email: emailController.text, password: passwordController.text);
     Response response = await authRepository.signIn(authModel);
+      print(response.data);
     try {
       if (response.statusCode == 200) {
 
         setState(() {
           isLoading = false;
         });
+        print(response.data);
         await prefs.setString('token', response.data);
         prefs.setBool("notAuth", false);
         AutoRouter.of(context).push(HomeRoute(message: widget.unAuthMessage));
@@ -103,14 +105,12 @@ class _LoginDialogState extends State<LoginDialog> {
                 controller: emailController,
                 labelText: S.of(context).email,
                 validator: ValidationService().validateEmail,
-                hintText: S.of(context).inputYourEmail,
               ),
               const SizedBox(height: 20),
               FormFieldTypeOne(
                 controller: passwordController,
                 labelText: S.of(context).password,
                 validator: ValidationService().validatePassword,
-                hintText: S.of(context).inputYourPassword,
               ),
               const SizedBox(height: 50),
               Row(

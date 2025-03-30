@@ -12,13 +12,6 @@ class TextProgCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xff1C54B5),
         borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 4,
-            spreadRadius: 1,
-          )
-        ],
       ),
       child: Text(
         text,

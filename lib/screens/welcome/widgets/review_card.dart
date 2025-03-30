@@ -17,24 +17,15 @@ class _ReviewCardState extends State<ReviewCard> {
       width: 400,
       height: 420,
         padding: const EdgeInsets.all(25),
-        margin: const EdgeInsets.symmetric(vertical: 20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 10,
-              spreadRadius: 1,
-            )
-          ],
         ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(child: Image.asset(widget.reviews.avatarUrl, width: 50,
-          semanticLabel: "select",)),
+          Image.asset(widget.reviews.avatarUrl, width: 50,),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

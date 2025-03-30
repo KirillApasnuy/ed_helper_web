@@ -81,14 +81,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
         height: screenHeight,
         child: Stack(
           children: [
-            Positioned(
-              left: -200,
-              top: -50,
-              child: Image.asset(
-                "assets/logo_back_transparet.png",
-                fit: BoxFit.fitHeight,
-                width: 700,
-                height: 700,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Transform.translate(
+                offset: const Offset(-290, 0),
+                child: Image.asset(
+                  "assets/logo_back_transparet.png",
+                  fit: BoxFit.cover,
+                  width: 800,
+                  height: 800,
+                ),
               ),
             ),
             if (widget.authUser != null)

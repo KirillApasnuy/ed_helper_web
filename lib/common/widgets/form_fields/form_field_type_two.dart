@@ -64,13 +64,6 @@ class _FormFieldTypeTwoState extends State<FormFieldTypeTwo> {
               border: Border.all(color: Colors.black, width: 1),
               borderRadius: BorderRadius.circular(30),
               color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.blue.withOpacity(0.18),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                )
-              ]
             ),
             constraints: const BoxConstraints(minHeight: 35),
             padding: EdgeInsets.all(widget.isViewTile! ? 5 : 0),
